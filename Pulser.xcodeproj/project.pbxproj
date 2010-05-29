@@ -546,6 +546,7 @@
 		A371005B117F7BDB00C435F8 /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fire.png; sourceTree = "<group>"; };
 		A371005D117F7CC400C435F8 /* GameLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameLayer.h; sourceTree = "<group>"; };
 		A371005E117F7CC400C435F8 /* GameLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameLayer.m; sourceTree = "<group>"; };
+		A3D79E4011B1D68400444B14 /* Test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Test.h; sourceTree = "<group>"; };
 		A3EB580F1180CE43005F197D /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		DC6640020F83B3EA000B3E49 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		DC6640040F83B3EA000B3E49 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
@@ -1036,6 +1037,7 @@
 				A3710049117F7BBF00C435F8 /* PulseNode.m */,
 				A371004A117F7BBF00C435F8 /* MeteorNode.h */,
 				A371004B117F7BBF00C435F8 /* MeteorNode.m */,
+				A3D79E4011B1D68400444B14 /* Test.h */,
 			);
 			name = Assets;
 			sourceTree = "<group>";
@@ -1232,6 +1234,7 @@
 			hasScannedForEncodings = 1;
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
+			projectRoot = "";
 			targets = (
 				1D6058900D05DD3D006BFB54 /* Pulser */,
 				506EE05D10304ED200A389B3 /* cocos2d libraries */,
