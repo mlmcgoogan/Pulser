@@ -29,10 +29,6 @@ typedef enum BoundType {
 	
 	cpShape *shape;
 	cpSpace *_space;
-	
-	@private
-	cpBody *springBody;
-	cpConstraint *springJoint;
 }
 
 @property (nonatomic, retain) CCParticleSystem *particleSystem;
@@ -47,7 +43,6 @@ typedef enum BoundType {
 
 // Chipmunk
 - (void)setPosition:(CGPoint)pos;
-- (void)prepForRemoval;
 
 // Changing color of node
 - (void)tintNode:(UIColor *)color;

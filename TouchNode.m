@@ -184,20 +184,6 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 	[self.sprite setRotation:rot];
 }
 
-- (void)prepForRemoval {
-	if (springBody != NULL) {
-		cpSpaceRemoveBody(_space, springBody);
-		cpBodyFree(springBody);
-		springBody = NULL;
-	}
-	
-	if (springJoint != NULL) {
-		cpSpaceRemoveConstraint(_space, springJoint);
-		cpConstraintFree(springJoint);
-		springJoint = NULL;
-	}
-}
-
 #pragma mark -
 #pragma mark Touch Handler
 
@@ -212,15 +198,8 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 	CGFloat delta = fabsf(ccpDistance(pos, sprite.position));
 	
 	if (delta < TOUCHNODE_RADIUS) {
-		if (springBody == NULL) {
-			springBody = cpBodyNew(INFINITY, INFINITY);
-			springBody->p = pos;
-			
-			springJoint = cpSlideJointNew(springBody, shape->body, cpvzero, cpvzero, 0.0, 10.0);
-			cpSpaceAddConstraint(_space, springJoint);
-			
-			shouldCatch = YES;
-		}
+		
+		shouldCatch = YES;
 	}
 	
 	return shouldCatch;
@@ -229,35 +208,17 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 - (void)ccTouchMoved:(UITouch *)touch withEvent:(UIEvent *)event {
 	CGPoint pos = [self localTouchPoint:touch];
 	
-	springBody->p = pos;
 }
 
 - (void)ccTouchEnded:(UITouch *)touch withEvent:(UIEvent *)event {
-	/*
-	CGPoint seedStart = [[CCDirector sharedDirector] convertToGL:[touch previousLocationInView:touch.view]];
-	CGPoint seedEnd = [self localTouchPoint:touch];
-	
-	CGPoint delta = ccpSub(seedEnd, seedStart);
-	delta = ccpMult(delta, 500.0);
-	cpBodyApplyImpulse(shape->body, delta, cpvzero);
-	 */
 	
 	CGPoint p1 = shape->body->p;
-	CGPoint p2 = springBody->p;
 	
 	CGPoint vMag = ccpSub(p2, p1);
 	vMag = ccpNormalize(vMag);
 	vMag = ccpMult(vMag, 1000.0);
 	
-	cpSpaceRemoveConstraint(_space, springJoint);
-	cpConstraintFree(springJoint);
-	springJoint = NULL;
 	
-	cpSpaceRemoveBody(_space, springBody);
-	cpBodyFree(springBody);
-	springBody = NULL;
-	
-	cpBodyApplyImpulse(shape->body, vMag, cpvzero);
 }
 
 @end
