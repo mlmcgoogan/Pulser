@@ -18,7 +18,7 @@
 static void
 dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 {
-	damping = 0.9;
+	damping = 0.99;
 	cpBodyUpdateVelocity(body, gravity, damping, dt);
 }
 
@@ -43,8 +43,6 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 - (id) init {
 	if ((self = [super init])) {
 		sprite = nil;
-		springBody = NULL;
-		springJoint = NULL;
 		player = nil;
 	}
 	
@@ -96,6 +94,10 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 		s2 = [CCScaleTo actionWithDuration:0.2f scale:1.0];
 		[sprite runAction:[CCSequence actions:s1, s2, nil]];
 	}
+}
+
+- (void)dealloc {
+	[super dealloc];
 }
 
 - (void)onEnter {
@@ -198,7 +200,7 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 	CGFloat delta = fabsf(ccpDistance(pos, sprite.position));
 	
 	if (delta < TOUCHNODE_RADIUS) {
-		
+		touchStart = pos;
 		shouldCatch = YES;
 	}
 	
@@ -211,14 +213,14 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 }
 
 - (void)ccTouchEnded:(UITouch *)touch withEvent:(UIEvent *)event {
+	CGPoint pos = [self localTouchPoint:touch];
 	
-	CGPoint p1 = shape->body->p;
+	CGPoint vect = ccpNormalize(ccpSub(pos, touchStart));
+	CGFloat mag = fabsf(ccpDistance(pos, touchStart)) * 50.0;
 	
-	CGPoint vMag = ccpSub(p2, p1);
-	vMag = ccpNormalize(vMag);
-	vMag = ccpMult(vMag, 1000.0);
+	vect = ccpMult(vect, mag);
 	
-	
+	cpBodyApplyImpulse(self.shape->body, vect, cpvzero);
 }
 
 @end

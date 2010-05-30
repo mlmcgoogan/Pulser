@@ -29,6 +29,9 @@ typedef enum BoundType {
 	
 	cpShape *shape;
 	cpSpace *_space;
+	
+	@private
+	CGPoint touchStart;
 }
 
 @property (nonatomic, retain) CCParticleSystem *particleSystem;

@@ -102,7 +102,6 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 	TouchNode *tNode = (TouchNode *)shape->data;
 	GameLayer *gLayer = (GameLayer *)unused;
 	
-	[tNode prepForRemoval];
 	[gLayer removeChild:tNode cleanup:YES];
 	[gLayer.touchNodeSheet removeChild:tNode.sprite cleanup:YES];
 	[gLayer.player removeTouchNode:tNode];
