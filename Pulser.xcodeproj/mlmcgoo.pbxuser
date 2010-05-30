@@ -81,15 +81,15 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 296930595;
-			PBXWorkspaceStateSaveDate = 296930595;
+			PBXPerProjectTemplateStateSaveDate = 296948365;
+			PBXWorkspaceStateSaveDate = 296948365;
 		};
 		perUserProjectItems = {
 			A3BE351A11B2E9F300AC0C15 /* PBXTextBookmark */ = A3BE351A11B2E9F300AC0C15 /* PBXTextBookmark */;
 			A3BE352C11B2EA1B00AC0C15 /* PBXTextBookmark */ = A3BE352C11B2EA1B00AC0C15 /* PBXTextBookmark */;
 			A3BE352D11B2EA1B00AC0C15 /* PBXTextBookmark */ = A3BE352D11B2EA1B00AC0C15 /* PBXTextBookmark */;
-			A3BE352E11B2EA1B00AC0C15 /* PBXTextBookmark */ = A3BE352E11B2EA1B00AC0C15 /* PBXTextBookmark */;
 			A3BE354511B2EC2C00AC0C15 /* PBXTextBookmark */ = A3BE354511B2EC2C00AC0C15 /* PBXTextBookmark */;
+			A3BE358211B312BC00AC0C15 /* PBXTextBookmark */ = A3BE358211B312BC00AC0C15 /* PBXTextBookmark */;
 		};
 		sourceControlManager = A30EA6AB117E6FBF001EDE37 /* Source Control */;
 		userBuildSettings = {
@@ -265,9 +265,9 @@
 	};
 	A3710047117F7BBF00C435F8 /* TouchNode.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1379, 3029}}";
-			sepNavSelRange = "{377, 0}";
-			sepNavVisRange = "{576, 408}";
+			sepNavIntBoundsRect = "{{0, 0}, {1201, 2912}}";
+			sepNavSelRange = "{4692, 0}";
+			sepNavVisRange = "{4129, 1250}";
 			sepNavWindowFrame = "{{15, 8}, {1262, 865}}";
 		};
 	};
@@ -343,16 +343,6 @@
 		vrLen = 1277;
 		vrLoc = 2449;
 	};
-	A3BE352E11B2EA1B00AC0C15 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = A3710047117F7BBF00C435F8 /* TouchNode.m */;
-		name = "TouchNode.m: 32";
-		rLen = 0;
-		rLoc = 535;
-		rType = 0;
-		vrLen = 1190;
-		vrLoc = 0;
-	};
 	A3BE354511B2EC2C00AC0C15 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = A3710047117F7BBF00C435F8 /* TouchNode.m */;
@@ -362,6 +352,16 @@
 		rType = 0;
 		vrLen = 1353;
 		vrLoc = 4019;
+	};
+	A3BE358211B312BC00AC0C15 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A3710047117F7BBF00C435F8 /* TouchNode.m */;
+		name = "TouchNode.m: 196";
+		rLen = 0;
+		rLoc = 4692;
+		rType = 0;
+		vrLen = 1250;
+		vrLoc = 4129;
 	};
 	A3EB580F1180CE43005F197D /* Constants.h */ = {
 		uiCtxt = {

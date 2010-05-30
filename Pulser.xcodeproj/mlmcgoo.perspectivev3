@@ -326,13 +326,13 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>A3BE354511B2EC2C00AC0C15</string>
+										<string>A3BE358211B312BC00AC0C15</string>
 										<key>history</key>
 										<array>
 											<string>A3BE351A11B2E9F300AC0C15</string>
 											<string>A3BE352C11B2EA1B00AC0C15</string>
 											<string>A3BE352D11B2EA1B00AC0C15</string>
-											<string>A3BE352E11B2EA1B00AC0C15</string>
+											<string>A3BE354511B2EC2C00AC0C15</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -455,11 +455,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A3BE351E11B2E9F700AC0C15</string>
+				<string>A3BE357711B3129700AC0C15</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>A3BE351F11B2E9F700AC0C15</string>
+				<string>A3BE357811B3129700AC0C15</string>
 				<string>A326BE9C11B05956006B7CBC</string>
-				<string>A3BE352011B2E9F700AC0C15</string>
+				<string>A3BE357911B3129700AC0C15</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -608,14 +608,14 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>A3BE352111B2E9F700AC0C15</string>
+				<string>A3BE357A11B3129700AC0C15</string>
 				<string>1CCC7628064C1048000F2A68</string>
 				<string>1CCC7629064C1048000F2A68</string>
-				<string>A3BE352211B2E9F700AC0C15</string>
-				<string>A3BE352311B2E9F700AC0C15</string>
-				<string>A3BE352411B2E9F700AC0C15</string>
-				<string>A3BE352511B2E9F700AC0C15</string>
-				<string>A326BE9C11B05956006B7CBC</string>
+				<string>A3BE357B11B3129700AC0C15</string>
+				<string>A3BE357C11B3129700AC0C15</string>
+				<string>A3BE357D11B3129700AC0C15</string>
+				<string>A3BE357E11B3129700AC0C15</string>
+				<string>A3BE357F11B3129700AC0C15</string>
 			</array>
 			<key>ToolbarConfigUserDefaultsMinorVersion</key>
 			<string>2</string>
@@ -649,8 +649,8 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>A3BE352711B2E9F700AC0C15</string>
-		<string>A3BE352811B2E9F700AC0C15</string>
+		<string>A3BE358311B312BC00AC0C15</string>
+		<string>A3BE358111B3129700AC0C15</string>
 		<string>/Users/mlmcgoo/Development/iPad/Pulser/Pulser/Pulser.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
