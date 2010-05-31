@@ -10,6 +10,7 @@
 #import "cocos2d.h"
 #import "chipmunk.h"
 @class MeteorNode;
+@class Player;
 
 #define PULSENODE_RADIUS 50.0f
 #define PULSENODE_MASS 50.0f
@@ -18,6 +19,7 @@
 	CCParticleSystem *particleSystem;
 	cpShape *shape;
 	NSMutableArray *meteors;
+	Player *player;
 	
 	@private
 	cpSpace *_space;
@@ -27,6 +29,7 @@
 
 @property (nonatomic, retain) CCParticleSystem *particleSystem;
 @property (nonatomic, readonly) NSMutableArray *meteors;
+@property (nonatomic, retain) Player *player;
 
 - (id)initWithPosition:(CGPoint)pos space:(cpSpace *)space;
 

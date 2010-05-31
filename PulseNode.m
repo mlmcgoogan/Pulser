@@ -9,6 +9,8 @@
 #import "PulseNode.h"
 #import "MeteorNode.h"
 #import "Constants.h"
+#import "Player.h"
+#import "TouchNode.h"
 
 
 @interface PulseNode (PrivateMethods)
@@ -20,7 +22,7 @@
 
 @implementation PulseNode
 
-@synthesize particleSystem, meteors;
+@synthesize particleSystem, meteors, player;
 
 - (id)initWithPosition:(CGPoint)pos space:(cpSpace *)space {
 	if ((self = [super init])) {
@@ -120,10 +122,15 @@
 #pragma mark Meteors
 
 - (void)launchMeteorStep:(ccTime)dt {
-	CGFloat x = (float)(random() % 2000) - 1000.0;
-	CGFloat y = (float)(random() % 2000) - 1000.0;
 	
-	CGPoint end = CGPointMake(x, y);
+	NSArray *touchNodes = [player touchNodes];
+	int ind = random() % [touchNodes count];
+	TouchNode *tNode = [touchNodes objectAtIndex:ind];
+	
+	CGPoint end = ccpSub(tNode.shape->body->p, self.particleSystem.position);
+	end.x = end.x + (float)(random() % 40) - 20.0;
+	end.y = end.y + (float)(random() % 40) - 20.0;
+	
 	end = ccpNormalize(end);
 	MeteorNode *met = [[[MeteorNode alloc] initWithStart:self.particleSystem.position direction:end space:_space] autorelease];
 	[meteors addObject:met];

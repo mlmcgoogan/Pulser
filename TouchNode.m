@@ -52,6 +52,7 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 - (id)initWithSpritePosition:(CGPoint)pos sheet:(CCSpriteSheet *)sheet space:(cpSpace *)space {
 	if ((self = [self init])) {
 		
+		touchCurrent = CGPointZero;
 		_space = space;
 		
 		cpBody *body = cpBodyNew(TOUCHNODE_MASS, cpMomentForCircle(TOUCHNODE_MASS, TOUCHNODE_RADIUS, TOUCHNODE_RADIUS, cpvzero));
@@ -108,6 +109,15 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 - (void)onExit {
 	[super onExit];
 	[[CCTouchDispatcher sharedDispatcher] removeDelegate:self];
+}
+
+#pragma mark -
+#pragma mark HUD
+
+- (void)draw {
+	if (!CGPointEqualToPoint(touchCurrent, CGPointZero)) {
+		ccDrawLine(self.shape->body->p, touchCurrent);
+	}
 }
 
 #pragma mark -
@@ -209,10 +219,11 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 
 - (void)ccTouchMoved:(UITouch *)touch withEvent:(UIEvent *)event {
 	CGPoint pos = [self localTouchPoint:touch];
-	
+	touchCurrent = pos;
 }
 
 - (void)ccTouchEnded:(UITouch *)touch withEvent:(UIEvent *)event {
+	touchCurrent = CGPointZero;
 	CGPoint pos = [self localTouchPoint:touch];
 	
 	CGPoint vect = ccpNormalize(ccpSub(pos, touchStart));

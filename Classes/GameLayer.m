@@ -232,6 +232,7 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 		
 		CGSize s = [[CCDirector sharedDirector] winSize];
 		pulseNode = [[PulseNode alloc] initWithPosition:CGPointMake(85.0, (s.height / 2.0)) space:space];
+		pulseNode.player = player;
 		
 		
 		touchNodeSheet = [[CCSpriteSheet alloc] initWithFile:@"touchNode_144.png" capacity:10];
@@ -245,6 +246,9 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 			[player addTouchNode:node];
 		}
 		
+		scoreLabel = [CCLabel labelWithString:@"Score: 000000" fontName:@"Helvetica" fontSize:24.0];
+		scoreLabel.position = ccp(wins.width / 2.0, wins.height - 24.0);
+		[self addChild:scoreLabel];
 		
 		/**
 		 * Collision Callbacks
@@ -272,12 +276,13 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 	[super onEnter];
 	[self schedule:@selector(mainStep:)];
 	[self schedule:@selector(addTouchNodeStep:) interval:5.0];
+	[self schedule:@selector(scoreStep:) interval:1.0/5.0];
 }
 
 - (void)onExit {
-	[super onExit];
 	[self unschedule:@selector(mainStep:)];
 	[self unschedule:@selector(addTouchNodeStep:)];
+	[super onExit];
 }
 
 #pragma mark -
@@ -293,6 +298,18 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 	
 	cpSpaceHashEach(space->activeShapes, &eachShape, pulseNode);
 	cpSpaceHashEach(space->staticShapes, &eachShape, NULL);
+}
+
+- (void)scoreStep:(ccTime)dt {
+	score++;
+	[scoreLabel setString:[NSString stringWithFormat:@"Score: %06d", score]];
+	
+	if (score == 200) {
+		PulseNode *pNode = [[PulseNode alloc] initWithPosition:pulseNode.particleSystem.position space:space];
+		pNode.player = player;
+		[self addChild:pNode];
+		[pNode release];
+	}
 }
 
 #pragma mark -

@@ -32,6 +32,7 @@ typedef enum BoundType {
 	
 	@private
 	CGPoint touchStart;
+	CGPoint touchCurrent;
 }
 
 @property (nonatomic, retain) CCParticleSystem *particleSystem;

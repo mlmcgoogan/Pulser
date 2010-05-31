@@ -264,6 +264,7 @@
 		A371005A117F7BD100C435F8 /* touchNode.png in Resources */ = {isa = PBXBuildFile; fileRef = A3710057117F7BD100C435F8 /* touchNode.png */; };
 		A371005C117F7BDB00C435F8 /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = A371005B117F7BDB00C435F8 /* fire.png */; };
 		A371005F117F7CC400C435F8 /* GameLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A371005E117F7CC400C435F8 /* GameLayer.m */; };
+		A3BE35A411B3153900AC0C15 /* NavigationLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BE35A311B3153900AC0C15 /* NavigationLayer.m */; };
 		DC6640030F83B3EA000B3E49 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC6640020F83B3EA000B3E49 /* AudioToolbox.framework */; };
 		DC6640050F83B3EA000B3E49 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC6640040F83B3EA000B3E49 /* OpenAL.framework */; };
 		DCCBF1B70F6022AE0040855A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCBF1B60F6022AE0040855A /* CoreGraphics.framework */; };
@@ -546,6 +547,8 @@
 		A371005B117F7BDB00C435F8 /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fire.png; sourceTree = "<group>"; };
 		A371005D117F7CC400C435F8 /* GameLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameLayer.h; sourceTree = "<group>"; };
 		A371005E117F7CC400C435F8 /* GameLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameLayer.m; sourceTree = "<group>"; };
+		A3BE35A211B3153900AC0C15 /* NavigationLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationLayer.h; sourceTree = "<group>"; };
+		A3BE35A311B3153900AC0C15 /* NavigationLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationLayer.m; sourceTree = "<group>"; };
 		A3EB580F1180CE43005F197D /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		DC6640020F83B3EA000B3E49 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		DC6640040F83B3EA000B3E49 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
@@ -1032,6 +1035,8 @@
 			children = (
 				A3710046117F7BBF00C435F8 /* TouchNode.h */,
 				A3710047117F7BBF00C435F8 /* TouchNode.m */,
+				A3BE35A211B3153900AC0C15 /* NavigationLayer.h */,
+				A3BE35A311B3153900AC0C15 /* NavigationLayer.m */,
 				A3710048117F7BBF00C435F8 /* PulseNode.h */,
 				A3710049117F7BBF00C435F8 /* PulseNode.m */,
 				A371004A117F7BBF00C435F8 /* MeteorNode.h */,
@@ -1270,6 +1275,7 @@
 				A371004D117F7BBF00C435F8 /* PulseNode.m in Sources */,
 				A371004E117F7BBF00C435F8 /* MeteorNode.m in Sources */,
 				A371005F117F7CC400C435F8 /* GameLayer.m in Sources */,
+				A3BE35A411B3153900AC0C15 /* NavigationLayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

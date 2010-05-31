@@ -18,6 +18,11 @@
 	Player *player;
 	PulseNode *pulseNode;
 	CCSpriteSheet *touchNodeSheet;
+	
+	CCLabel *scoreLabel;
+	
+	@private
+	int score;
 }
 
 @property (nonatomic, readonly) PulseNode *pulseNode;
@@ -33,5 +38,8 @@
 // Adding TouchNodes
 - (void)addTouchNode;
 - (void)addTouchNodeStep:(ccTime)dt;
+
+// Scoring
+- (void)scoreStep:(ccTime)dt;
 
 @end
