@@ -42,4 +42,7 @@
 // Scoring
 - (void)scoreStep:(ccTime)dt;
 
+// Pulse Navigation
+- (void)applyNavigationPulse:(CGPoint)pos;
+
 @end

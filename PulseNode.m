@@ -122,19 +122,20 @@
 #pragma mark Meteors
 
 - (void)launchMeteorStep:(ccTime)dt {
-	
-	NSArray *touchNodes = [player touchNodes];
-	int ind = random() % [touchNodes count];
-	TouchNode *tNode = [touchNodes objectAtIndex:ind];
-	
-	CGPoint end = ccpSub(tNode.shape->body->p, self.particleSystem.position);
-	end.x = end.x + (float)(random() % 40) - 20.0;
-	end.y = end.y + (float)(random() % 40) - 20.0;
-	
-	end = ccpNormalize(end);
-	MeteorNode *met = [[[MeteorNode alloc] initWithStart:self.particleSystem.position direction:end space:_space] autorelease];
-	[meteors addObject:met];
-	[self addChild:met];
+	if ([[player touchNodes] count] > 0) {
+		NSArray *touchNodes = [player touchNodes];
+		int ind = random() % [touchNodes count];
+		TouchNode *tNode = [touchNodes objectAtIndex:ind];
+		
+		CGPoint end = ccpSub(tNode.shape->body->p, self.particleSystem.position);
+		end.x = end.x + (float)(random() % 40) - 20.0;
+		end.y = end.y + (float)(random() % 40) - 20.0;
+		
+		end = ccpNormalize(end);
+		MeteorNode *met = [[[MeteorNode alloc] initWithStart:self.particleSystem.position direction:end space:_space] autorelease];
+		[meteors addObject:met];
+		[self addChild:met];
+	}
 }
 
 - (void)removeMeteor:(MeteorNode *)meteor {

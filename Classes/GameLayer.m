@@ -125,6 +125,7 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 	if ((self = [super init])) {
 		
 		srandom(time(NULL));
+		self.isTouchEnabled = YES;
 		
 		CGSize wins = [[CCDirector sharedDirector] winSize];
 		
@@ -339,6 +340,32 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 	TouchNode *node = [TouchNode nodeWithPosition:ccp(x,y) sheet:touchNodeSheet space:space];
 	[self addChild:node];
 	[player addTouchNode:node];
+}
+
+#pragma mark -
+#pragma mark Handling touches
+
+- (void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+	for (UITouch *touch in [touches allObjects]) {
+		CGPoint pos = [[CCDirector sharedDirector] convertToGL:[touch locationInView:touch.view]];
+		[self applyNavigationPulse:pos];
+	}
+}
+
+#pragma mark -
+#pragma mark Navigation
+
+- (void)applyNavigationPulse:(CGPoint)pos {
+	for (TouchNode *node in [player touchNodes]) {
+		CGPoint nodePos = node.shape->body->p;
+		
+		CGPoint delta = ccpSub(nodePos, pos);
+		CGPoint unitVec = ccpNormalize(delta);
+		CGFloat distance = fabsf(ccpDistance(nodePos, pos));
+		CGPoint forceVec = ccpMult(unitVec, (7.0/distance * 100000.0));
+		
+		cpBodyApplyImpulse(node.shape->body, forceVec, cpvzero);
+	}
 }
 
 

@@ -112,15 +112,6 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 }
 
 #pragma mark -
-#pragma mark HUD
-
-- (void)draw {
-	if (!CGPointEqualToPoint(touchCurrent, CGPointZero)) {
-		ccDrawLine(self.shape->body->p, touchCurrent);
-	}
-}
-
-#pragma mark -
 #pragma mark Coloring
 
 - (void)tintNode:(UIColor *)color {
