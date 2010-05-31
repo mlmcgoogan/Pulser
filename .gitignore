@@ -3,3 +3,9 @@
 build/
 .svn*
 .svn/
+*.pbxuser
+*.perspective
+*.perspectivev3
+.DS_Store
+*.swp
+*~.nib
