@@ -12,6 +12,7 @@
 #import "PulseNode.h"
 #import "MeteorNode.h"
 #import "Constants.h"
+#import "SpriteAutoRemoval.h"
 
 
 #pragma mark -
@@ -305,7 +306,7 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 	score++;
 	[scoreLabel setString:[NSString stringWithFormat:@"Score: %06d", score]];
 	
-	if (score == 200) {
+	if (score == -1) {
 		PulseNode *pNode = [[PulseNode alloc] initWithPosition:pulseNode.particleSystem.position space:space];
 		pNode.player = player;
 		[self addChild:pNode];
@@ -348,8 +349,18 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 - (void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
 	for (UITouch *touch in [touches allObjects]) {
 		CGPoint pos = [[CCDirector sharedDirector] convertToGL:[touch locationInView:touch.view]];
+		[self displayTap:pos];
 		[self applyNavigationPulse:pos];
 	}
+}
+
+- (void)displayTap:(CGPoint)pos {
+	CCSprite *sprite = [CCSprite spriteWithFile:@"tapCircle.png"];
+	sprite.position = pos;
+	sprite.scale = 0.1;
+	
+	[self addChild:sprite];
+	[sprite runAction:[CCSequence actions:[CCScaleTo actionWithDuration:0.1 scale:1.0], [CCCallFunc actionWithTarget:sprite selector:@selector(removeFromParent)], nil]];
 }
 
 #pragma mark -

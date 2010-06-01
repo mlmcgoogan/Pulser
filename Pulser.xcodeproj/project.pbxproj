@@ -264,6 +264,8 @@
 		A371005A117F7BD100C435F8 /* touchNode.png in Resources */ = {isa = PBXBuildFile; fileRef = A3710057117F7BD100C435F8 /* touchNode.png */; };
 		A371005C117F7BDB00C435F8 /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = A371005B117F7BDB00C435F8 /* fire.png */; };
 		A371005F117F7CC400C435F8 /* GameLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A371005E117F7CC400C435F8 /* GameLayer.m */; };
+		A3C2823E11B4455400D94B79 /* tapCircle.png in Resources */ = {isa = PBXBuildFile; fileRef = A3C2823D11B4455400D94B79 /* tapCircle.png */; };
+		A3EF8F2811B5B46C00862B80 /* SpriteAutoRemoval.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EF8F2711B5B46C00862B80 /* SpriteAutoRemoval.m */; };
 		DC6640030F83B3EA000B3E49 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC6640020F83B3EA000B3E49 /* AudioToolbox.framework */; };
 		DC6640050F83B3EA000B3E49 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC6640040F83B3EA000B3E49 /* OpenAL.framework */; };
 		DCCBF1B70F6022AE0040855A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCBF1B60F6022AE0040855A /* CoreGraphics.framework */; };
@@ -546,7 +548,10 @@
 		A371005B117F7BDB00C435F8 /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fire.png; sourceTree = "<group>"; };
 		A371005D117F7CC400C435F8 /* GameLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameLayer.h; sourceTree = "<group>"; };
 		A371005E117F7CC400C435F8 /* GameLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameLayer.m; sourceTree = "<group>"; };
+		A3C2823D11B4455400D94B79 /* tapCircle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tapCircle.png; sourceTree = "<group>"; };
 		A3EB580F1180CE43005F197D /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		A3EF8F2611B5B46C00862B80 /* SpriteAutoRemoval.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpriteAutoRemoval.h; sourceTree = "<group>"; };
+		A3EF8F2711B5B46C00862B80 /* SpriteAutoRemoval.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpriteAutoRemoval.m; sourceTree = "<group>"; };
 		DC6640020F83B3EA000B3E49 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		DC6640040F83B3EA000B3E49 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		DCCBF1B60F6022AE0040855A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1036,6 +1041,8 @@
 				A3710049117F7BBF00C435F8 /* PulseNode.m */,
 				A371004A117F7BBF00C435F8 /* MeteorNode.h */,
 				A371004B117F7BBF00C435F8 /* MeteorNode.m */,
+				A3EF8F2611B5B46C00862B80 /* SpriteAutoRemoval.h */,
+				A3EF8F2711B5B46C00862B80 /* SpriteAutoRemoval.m */,
 			);
 			name = Assets;
 			sourceTree = "<group>";
@@ -1043,6 +1050,7 @@
 		A3710054117F7BD100C435F8 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				A3C2823D11B4455400D94B79 /* tapCircle.png */,
 				A3710055117F7BD100C435F8 /* touchNode_144.png */,
 				A3710056117F7BD100C435F8 /* pulseNode_144.png */,
 				A3710057117F7BD100C435F8 /* touchNode.png */,
@@ -1252,6 +1260,7 @@
 				A3710059117F7BD100C435F8 /* pulseNode_144.png in Resources */,
 				A371005A117F7BD100C435F8 /* touchNode.png in Resources */,
 				A371005C117F7BDB00C435F8 /* fire.png in Resources */,
+				A3C2823E11B4455400D94B79 /* tapCircle.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1270,6 +1279,7 @@
 				A371004D117F7BBF00C435F8 /* PulseNode.m in Sources */,
 				A371004E117F7BBF00C435F8 /* MeteorNode.m in Sources */,
 				A371005F117F7CC400C435F8 /* GameLayer.m in Sources */,
+				A3EF8F2811B5B46C00862B80 /* SpriteAutoRemoval.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

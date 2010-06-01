@@ -44,5 +44,6 @@
 
 // Pulse Navigation
 - (void)applyNavigationPulse:(CGPoint)pos;
+- (void)displayTap:(CGPoint)pos;
 
 @end
