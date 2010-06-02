@@ -12,7 +12,9 @@
 #import "PulseNode.h"
 #import "MeteorNode.h"
 #import "Constants.h"
+#import "SpriteAutoRemoval.h"
 
+#define SCORELABEL_PADDING 24.0
 
 #pragma mark -
 #pragma mark Chipmunk Callbacks
@@ -125,6 +127,7 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 	if ((self = [super init])) {
 		
 		srandom(time(NULL));
+		self.isTouchEnabled = YES;
 		
 		CGSize wins = [[CCDirector sharedDirector] winSize];
 		
@@ -247,7 +250,7 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 		}
 		
 		scoreLabel = [CCLabel labelWithString:@"Score: 000000" fontName:@"Helvetica" fontSize:24.0];
-		scoreLabel.position = ccp(wins.width / 2.0, wins.height - 24.0);
+		scoreLabel.position = ccp(wins.width / 2.0, wins.height - SCORELABEL_PADDING);
 		[self addChild:scoreLabel];
 		
 		/**
@@ -274,12 +277,23 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 
 - (void)onEnter {
 	[super onEnter];
+	
+	// Used to auto rotate interface based on orientation
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+	
 	[self schedule:@selector(mainStep:)];
 	[self schedule:@selector(addTouchNodeStep:) interval:5.0];
 	[self schedule:@selector(scoreStep:) interval:1.0/5.0];
 }
 
 - (void)onExit {
+	
+	[[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
 	[self unschedule:@selector(mainStep:)];
 	[self unschedule:@selector(addTouchNodeStep:)];
 	[super onExit];
@@ -304,7 +318,7 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 	score++;
 	[scoreLabel setString:[NSString stringWithFormat:@"Score: %06d", score]];
 	
-	if (score == 200) {
+	if (score == -1) {
 		PulseNode *pNode = [[PulseNode alloc] initWithPosition:pulseNode.particleSystem.position space:space];
 		pNode.player = player;
 		[self addChild:pNode];
@@ -341,5 +355,79 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 	[player addTouchNode:node];
 }
 
+#pragma mark -
+#pragma mark Handling touches
+
+- (void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+	for (UITouch *touch in [touches allObjects]) {
+		CGPoint pos = [[CCDirector sharedDirector] convertToGL:[touch locationInView:touch.view]];
+		[self displayTap:pos];
+		[self applyNavigationPulse:pos];
+	}
+}
+
+- (void)displayTap:(CGPoint)pos {
+	CCSprite *sprite = [CCSprite spriteWithFile:@"tapCircle.png"];
+	sprite.position = pos;
+	sprite.scale = 0.1;
+	
+	[self addChild:sprite];
+	[sprite runAction:[CCSequence actions:[CCScaleTo actionWithDuration:0.1 scale:1.0], [CCCallFunc actionWithTarget:sprite selector:@selector(removeFromParent)], nil]];
+}
+
+#pragma mark -
+#pragma mark Navigation
+
+- (void)applyNavigationPulse:(CGPoint)pos {
+	for (TouchNode *node in [player touchNodes]) {
+		CGPoint nodePos = node.shape->body->p;
+		
+		CGPoint delta = ccpSub(nodePos, pos);
+		CGPoint unitVec = ccpNormalize(delta);
+		CGFloat distance = fabsf(ccpDistance(nodePos, pos));
+		CGPoint forceVec = ccpMult(unitVec, (7.0/distance * 100000.0));
+		
+		cpBodyApplyImpulse(node.shape->body, forceVec, cpvzero);
+	}
+}
+
+#pragma mark -
+#pragma mark Orientation changes
+
+- (void)orientationDidChange:(NSNotification *)notification {
+	UIDeviceOrientation orient = [[UIDevice currentDevice] orientation];
+	NSLog(@"Changing orient: %d", orient);
+	switch (orient) {
+		case UIDeviceOrientationPortrait:			[self rotateInterfacePortrait];					break;
+		case UIDeviceOrientationPortraitUpsideDown:	[self rotateInterfacePortraitUpsideDown];		break;
+		case UIDeviceOrientationLandscapeLeft:		[self rotateInterfaceLandscapeLeft];			break;
+		case UIDeviceOrientationLandscapeRight:		[self rotateInterfaceLandscapeRight];			break;
+		default:																					break;
+	}
+}
+
+- (void)rotateInterfacePortrait {
+	CGSize wins = [[CCDirector sharedDirector] winSize]; 
+	scoreLabel.position = CGPointMake(wins.width - SCORELABEL_PADDING, wins.height / 2.0);
+	scoreLabel.rotation = 90.0;
+}
+
+- (void)rotateInterfacePortraitUpsideDown {
+	CGSize wins = [[CCDirector sharedDirector] winSize]; 
+	scoreLabel.position = CGPointMake(SCORELABEL_PADDING, wins.height / 2.0);
+	scoreLabel.rotation = -90.0;
+}
+
+- (void)rotateInterfaceLandscapeLeft {
+	CGSize wins = [[CCDirector sharedDirector] winSize]; 
+	scoreLabel.position = CGPointMake(wins.width / 2.0, SCORELABEL_PADDING);
+	scoreLabel.rotation = 180.0;
+}
+
+- (void)rotateInterfaceLandscapeRight {
+	CGSize wins = [[CCDirector sharedDirector] winSize]; 
+	scoreLabel.position = CGPointMake(wins.width / 2.0, wins.height - SCORELABEL_PADDING);
+	scoreLabel.rotation = 0.0;
+}
 
 @end

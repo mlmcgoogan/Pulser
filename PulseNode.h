@@ -16,7 +16,7 @@
 #define PULSENODE_MASS 50.0f
 
 @interface PulseNode : CCLayer {
-	CCParticleSystem *particleSystem;
+	CCQuadParticleSystem *particleSystem;
 	cpShape *shape;
 	NSMutableArray *meteors;
 	Player *player;
@@ -27,7 +27,7 @@
 	cpBody *pathBody;
 }
 
-@property (nonatomic, retain) CCParticleSystem *particleSystem;
+@property (nonatomic, retain) CCQuadParticleSystem *particleSystem;
 @property (nonatomic, readonly) NSMutableArray *meteors;
 @property (nonatomic, retain) Player *player;
 

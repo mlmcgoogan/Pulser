@@ -42,4 +42,15 @@
 // Scoring
 - (void)scoreStep:(ccTime)dt;
 
+// Pulse Navigation
+- (void)applyNavigationPulse:(CGPoint)pos;
+- (void)displayTap:(CGPoint)pos;
+
+// Orientation changes
+- (void)orientationDidChange:(NSNotification *)notification;
+- (void)rotateInterfacePortrait;
+- (void)rotateInterfacePortraitUpsideDown;
+- (void)rotateInterfaceLandscapeLeft;
+- (void)rotateInterfaceLandscapeRight;
+
 @end

@@ -12,6 +12,12 @@
 #import "Player.h"
 #import "TouchNode.h"
 
+static void
+dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
+{
+	damping = 0.95;
+	cpBodyUpdateVelocity(body, gravity, damping, dt);
+}
 
 @interface PulseNode (PrivateMethods)
 
@@ -33,6 +39,7 @@
 		
 		cpBody *body = cpBodyNew(PULSENODE_MASS, INFINITY);
 		body->p = pos;
+		body->velocity_func = dampingVelocityFunc;
 		
 		shape = cpCircleShapeNew(body, PULSENODE_RADIUS, cpvzero);
 		shape->u = 0.1;
@@ -50,10 +57,15 @@
 		cpSpaceAddConstraint(space, joint);
 		
 		
+		/*
 		particleSystem = [[CCParticleGalaxy alloc] initWithTotalParticles:100];
 		particleSystem.startSize = 64.0;
 		particleSystem.position = pos;
-		particleSystem.startColorVar = ccc4FFromccc4B(ccc4(120,60,80,0));
+		particleSystem.startColorVar = ccc4FFromccc4B(ccc4(120,60,80,0));*/
+		
+		
+		particleSystem = [[CCQuadParticleSystem alloc] initWithFile:@"pulseNode.plist"];
+		particleSystem.position = pos;
 		[self addChild:particleSystem];
 		
 	}
@@ -62,6 +74,7 @@
 }
 
 - (void)dealloc {
+	[particleSystem release];
 	[meteors release];
 	[super dealloc];
 }
@@ -122,19 +135,20 @@
 #pragma mark Meteors
 
 - (void)launchMeteorStep:(ccTime)dt {
-	
-	NSArray *touchNodes = [player touchNodes];
-	int ind = random() % [touchNodes count];
-	TouchNode *tNode = [touchNodes objectAtIndex:ind];
-	
-	CGPoint end = ccpSub(tNode.shape->body->p, self.particleSystem.position);
-	end.x = end.x + (float)(random() % 40) - 20.0;
-	end.y = end.y + (float)(random() % 40) - 20.0;
-	
-	end = ccpNormalize(end);
-	MeteorNode *met = [[[MeteorNode alloc] initWithStart:self.particleSystem.position direction:end space:_space] autorelease];
-	[meteors addObject:met];
-	[self addChild:met];
+	if ([[player touchNodes] count] > 0) {
+		NSArray *touchNodes = [player touchNodes];
+		int ind = random() % [touchNodes count];
+		TouchNode *tNode = [touchNodes objectAtIndex:ind];
+		
+		CGPoint end = ccpSub(tNode.shape->body->p, self.particleSystem.position);
+		end.x = end.x + (float)(random() % 40) - 20.0;
+		end.y = end.y + (float)(random() % 40) - 20.0;
+		
+		end = ccpNormalize(end);
+		MeteorNode *met = [[[MeteorNode alloc] initWithStart:self.particleSystem.position direction:end space:_space] autorelease];
+		[meteors addObject:met];
+		[self addChild:met];
+	}
 }
 
 - (void)removeMeteor:(MeteorNode *)meteor {
