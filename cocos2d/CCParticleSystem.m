@@ -219,7 +219,6 @@
 			NSAssert( deflated != NULL, @"CCParticleSystem: error ungzipping textureImageData");
 			NSData *data = [[NSData alloc] initWithBytes:deflated length:deflatedLen];
 			UIImage *image = [[UIImage alloc] initWithData:data];
-			
 			self.texture = [[CCTextureCache sharedTextureCache] addCGImage:[image CGImage] forKey:textureName];
 			[data release];
 			[image release];

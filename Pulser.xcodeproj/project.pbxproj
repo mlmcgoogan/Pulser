@@ -159,6 +159,8 @@
 		A3EF90D111B5C5F200862B80 /* cpSpace.c in Sources */ = {isa = PBXBuildFile; fileRef = A3EF909D11B5C5F200862B80 /* cpSpace.c */; };
 		A3EF90D211B5C5F200862B80 /* cpSpaceHash.c in Sources */ = {isa = PBXBuildFile; fileRef = A3EF909E11B5C5F200862B80 /* cpSpaceHash.c */; };
 		A3EF90D311B5C5F200862B80 /* cpVect.c in Sources */ = {isa = PBXBuildFile; fileRef = A3EF909F11B5C5F200862B80 /* cpVect.c */; };
+		A3EF910111B5CB1000862B80 /* pulseNode.png in Resources */ = {isa = PBXBuildFile; fileRef = A3EF910011B5CB1000862B80 /* pulseNode.png */; };
+		A3EF915911B5D5B000862B80 /* pulseNode.plist in Resources */ = {isa = PBXBuildFile; fileRef = A3EF915811B5D5B000862B80 /* pulseNode.plist */; };
 		DC6640030F83B3EA000B3E49 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC6640020F83B3EA000B3E49 /* AudioToolbox.framework */; };
 		DC6640050F83B3EA000B3E49 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC6640040F83B3EA000B3E49 /* OpenAL.framework */; };
 		DCCBF1B70F6022AE0040855A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCCBF1B60F6022AE0040855A /* CoreGraphics.framework */; };
@@ -444,6 +446,8 @@
 		A3EF909E11B5C5F200862B80 /* cpSpaceHash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cpSpaceHash.c; sourceTree = "<group>"; };
 		A3EF909F11B5C5F200862B80 /* cpVect.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cpVect.c; sourceTree = "<group>"; };
 		A3EF90A011B5C5F200862B80 /* prime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prime.h; sourceTree = "<group>"; };
+		A3EF910011B5CB1000862B80 /* pulseNode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pulseNode.png; sourceTree = "<group>"; };
+		A3EF915811B5D5B000862B80 /* pulseNode.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = pulseNode.plist; sourceTree = "<group>"; };
 		DC6640020F83B3EA000B3E49 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		DC6640040F83B3EA000B3E49 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		DCCBF1B60F6022AE0040855A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -642,8 +646,10 @@
 		50F4144210692EE7002A0D5E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A3EF915811B5D5B000862B80 /* pulseNode.plist */,
 				A3710054117F7BD100C435F8 /* images */,
 				A371005B117F7BDB00C435F8 /* fire.png */,
+				A3EF910011B5CB1000862B80 /* pulseNode.png */,
 				50F4144410692EE7002A0D5E /* Default.png */,
 				50F4144510692EE7002A0D5E /* fps_images.png */,
 				50F4144610692EE7002A0D5E /* Icon.png */,
@@ -1035,6 +1041,8 @@
 				A371005C117F7BDB00C435F8 /* fire.png in Resources */,
 				A3C2823E11B4455400D94B79 /* tapCircle.png in Resources */,
 				A3EF90BD11B5C5F200862B80 /* CMakeLists.txt in Resources */,
+				A3EF910111B5CB1000862B80 /* pulseNode.png in Resources */,
+				A3EF915911B5D5B000862B80 /* pulseNode.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
