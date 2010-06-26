@@ -145,7 +145,7 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 		end.y = end.y + (float)(random() % 40) - 20.0;
 		
 		end = ccpNormalize(end);
-		MeteorNode *met = [[[MeteorNode alloc] initWithStart:self.particleSystem.position direction:end space:_space] autorelease];
+		MeteorNode *met = [[[MeteorNode alloc] initWithStart:self.particleSystem.position direction:end space:_space pulseNode:self] autorelease];
 		[meteors addObject:met];
 		[self addChild:met];
 	}

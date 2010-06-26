@@ -36,8 +36,8 @@ eachShape(void *ptr, void* unused)
 		[node setRotation: (float) CC_RADIANS_TO_DEGREES( -body->a )];
 		
 		if (unused != NULL && [node respondsToSelector:@selector(tintNodeBasedOnMeteorProximity:)]) {
-			PulseNode *pNode = (PulseNode *)unused;
-			NSArray *meteors = [NSArray arrayWithArray:pNode.meteors];
+			GameLayer *gLayer = (GameLayer *)unused;
+			NSArray *meteors = [gLayer allMeteors];
 			
 			[node tintNodeBasedOnMeteorProximity:meteors];
 		}
@@ -60,8 +60,8 @@ meteorRemovalBegin(cpArbiter *arb, cpSpace *space, void *unused)
 static void
 postStepMeteorRemoval(cpSpace *space, cpShape *shape, void *unused)
 {
-	PulseNode *pNode = (PulseNode *)unused;
 	MeteorNode *mNode = (MeteorNode *)shape->data;
+	PulseNode *pNode = mNode.pulseNode;
 	[pNode removeMeteor:mNode];
 	
 	cpSpaceRemoveBody(space, shape->body);
@@ -88,10 +88,9 @@ meteorTouchCollisionBegin(cpArbiter *arb, cpSpace *space, void *unused)
 	cpArbiterGetShapes(arb, &meteor, &touchNode);
 	
 	GameLayer *gLayer = (GameLayer *)unused;
-	PulseNode *pNode = (PulseNode *)gLayer.pulseNode;
 	
 	cpSpaceAddPostStepCallback(space, (cpPostStepFunc)postStepTouchNodeRemoval, touchNode, gLayer);
-	cpSpaceAddPostStepCallback(space, (cpPostStepFunc)postStepMeteorRemoval, meteor, pNode);
+	cpSpaceAddPostStepCallback(space, (cpPostStepFunc)postStepMeteorRemoval, meteor, NULL);
 	
 	[gLayer addCollisionAtPosition:cpArbiterGetPoint(arb, 0)];
 	
@@ -121,13 +120,16 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 
 @implementation GameLayer
 
-@synthesize pulseNode, player, touchNodeSheet;
+@synthesize pulseNodes, player, touchNodeSheet;
 
 - (id)init {
 	if ((self = [super init])) {
 		
 		srandom(time(NULL));
 		self.isTouchEnabled = YES;
+		gameRuntime = 0;
+		
+		pulseNodes = [[NSMutableArray alloc] init];
 		
 		CGSize wins = [[CCDirector sharedDirector] winSize];
 		
@@ -234,8 +236,9 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 		[player setColor:[UIColor colorWithRed:0.259 green:0.404 blue:0.875 alpha:1.0]];
 		
 		CGSize s = [[CCDirector sharedDirector] winSize];
-		pulseNode = [[PulseNode alloc] initWithPosition:CGPointMake(85.0, (s.height / 2.0)) space:space];
+		PulseNode *pulseNode = [[PulseNode alloc] initWithPosition:CGPointMake(85.0, (s.height / 2.0)) space:space];
 		pulseNode.player = player;
+		[pulseNodes addObject:pulseNode];
 		
 		
 		touchNodeSheet = [[CCSpriteSheet alloc] initWithFile:@"touchNode_144.png" capacity:10];
@@ -258,7 +261,7 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 		 **/
 		
 		// Setup meteors for removal on collision with sensors
-		cpSpaceAddCollisionHandler(space, REMOVAL_SENSOR_COL_GROUP, METEOR_COL_GROUP, meteorRemovalBegin, NULL, NULL, NULL, pulseNode);
+		cpSpaceAddCollisionHandler(space, REMOVAL_SENSOR_COL_GROUP, METEOR_COL_GROUP, meteorRemovalBegin, NULL, NULL, NULL, pulseNodes);
 		cpSpaceAddCollisionHandler(space, BOUNDARY_COL_GROUP, METEOR_COL_GROUP, meteorBoundaryIgnoreBegin, NULL, NULL, NULL, NULL);
 		cpSpaceAddCollisionHandler(space, METEOR_COL_GROUP, TOUCHNODE_COL_GROUP, meteorTouchCollisionBegin, NULL, NULL, NULL, self);
 		
@@ -271,7 +274,7 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 - (void)dealloc {
 	[touchNodeSheet release];
 	[player release];
-	[pulseNode release];
+	[pulseNodes release];
 	[super dealloc];
 }
 
@@ -286,6 +289,7 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 	[self schedule:@selector(mainStep:)];
 	[self schedule:@selector(addTouchNodeStep:) interval:5.0];
 	[self schedule:@selector(scoreStep:) interval:1.0/5.0];
+	[self schedule:@selector(gameStep:) interval:1.0];
 }
 
 - (void)onExit {
@@ -310,20 +314,19 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 		cpSpaceStep(space, delta);
 	}
 	
-	cpSpaceHashEach(space->activeShapes, &eachShape, pulseNode);
+	cpSpaceHashEach(space->activeShapes, &eachShape, self);
 	cpSpaceHashEach(space->staticShapes, &eachShape, NULL);
 }
 
 - (void)scoreStep:(ccTime)dt {
 	score++;
 	[scoreLabel setString:[NSString stringWithFormat:@"Score: %06d", score]];
+}
+
+- (void)gameStep:(ccTime) dt {
+	gameRuntime++;
+	int tNodeCount = [[player touchNodes] count];
 	
-	if (score == -1) {
-		PulseNode *pNode = [[PulseNode alloc] initWithPosition:pulseNode.particleSystem.position space:space];
-		pNode.player = player;
-		[self addChild:pNode];
-		[pNode release];
-	}
 }
 
 #pragma mark -
@@ -392,11 +395,22 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 }
 
 #pragma mark -
+#pragma mark Game Assets
+
+- (NSArray *)allMeteors {
+	NSMutableArray *arr = [NSMutableArray array];
+	for (PulseNode *pNode in pulseNodes) {
+		[arr addObjectsFromArray:pNode.meteors];
+	}
+	
+	return (NSArray *)arr;
+}
+
+#pragma mark -
 #pragma mark Orientation changes
 
 - (void)orientationDidChange:(NSNotification *)notification {
 	UIDeviceOrientation orient = [[UIDevice currentDevice] orientation];
-	NSLog(@"Changing orient: %d", orient);
 	switch (orient) {
 		case UIDeviceOrientationPortrait:			[self rotateInterfacePortrait];					break;
 		case UIDeviceOrientationPortraitUpsideDown:	[self rotateInterfacePortraitUpsideDown];		break;

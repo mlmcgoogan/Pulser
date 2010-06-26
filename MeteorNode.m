@@ -20,11 +20,12 @@
 
 @implementation MeteorNode
 
-@synthesize particleSystem, start, unitVector, shape;
+@synthesize particleSystem, start, unitVector, shape, pulseNode;
 
-- (id)initWithStart:(CGPoint)startPos direction:(CGPoint)dirUnitVec space:(cpSpace *)space {
+- (id)initWithStart:(CGPoint)startPos direction:(CGPoint)dirUnitVec space:(cpSpace *)space pulseNode:(PulseNode *)pNode {
 	if ((self = [super init])) {
 		
+		self.pulseNode = pNode;
 		
 		cpBody *body = cpBodyNew(METEOR_MASS, INFINITY);
 		body->p = startPos;
@@ -59,6 +60,7 @@
 
 - (void)dealloc {
 	[particleSystem release];
+	[pulseNode release];
 	[super dealloc];
 }
 

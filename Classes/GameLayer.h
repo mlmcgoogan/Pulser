@@ -16,16 +16,17 @@
 	cpSpace *space;
 	
 	Player *player;
-	PulseNode *pulseNode;
+	NSMutableArray *pulseNodes;
 	CCSpriteSheet *touchNodeSheet;
 	
 	CCLabel *scoreLabel;
 	
 	@private
 	int score;
+	int gameRuntime;
 }
 
-@property (nonatomic, readonly) PulseNode *pulseNode;
+@property (nonatomic, readonly) NSMutableArray *pulseNodes;
 @property (nonatomic, readonly) Player *player;
 @property (nonatomic, readonly) CCSpriteSheet *touchNodeSheet;
 
@@ -39,12 +40,18 @@
 - (void)addTouchNode;
 - (void)addTouchNodeStep:(ccTime)dt;
 
+// Primary game timer
+- (void)gameStep:(ccTime) dt;
+
 // Scoring
 - (void)scoreStep:(ccTime)dt;
 
 // Pulse Navigation
 - (void)applyNavigationPulse:(CGPoint)pos;
 - (void)displayTap:(CGPoint)pos;
+
+// All meteors
+- (NSArray *)allMeteors;
 
 // Orientation changes
 - (void)orientationDidChange:(NSNotification *)notification;
