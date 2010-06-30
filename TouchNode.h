@@ -33,6 +33,7 @@ typedef enum BoundType {
 	@private
 	CGPoint touchStart;
 	CGPoint touchCurrent;
+	NSMutableArray *shells;
 }
 
 @property (nonatomic, retain) CCParticleSystem *particleSystem;

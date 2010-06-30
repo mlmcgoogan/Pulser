@@ -52,6 +52,8 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 - (id)initWithSpritePosition:(CGPoint)pos sheet:(CCSpriteSheet *)sheet space:(cpSpace *)space {
 	if ((self = [self init])) {
 		
+		shells = [[NSMutableArray alloc] init];
+		
 		touchCurrent = CGPointZero;
 		_space = space;
 		
@@ -76,13 +78,6 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 
 - (void)initSpriteWithPosition:(CGPoint)pos sheet:(CCSpriteSheet *)sheet {
 	if (!sprite) {
-		/*
-		particleSystem = [[CCParticleSun alloc] initWithTotalParticles:10];
-		particleSystem.position = pos;
-		particleSystem.posVar = CGPointMake(50.0,50.0);
-		particleSystem.startColor = ccc4FFromccc4B(ccc4(66, 103, 223, 255));
-		[self addChild:particleSystem];
-		 */
 		
 		sprite = [[CCSprite alloc] initWithSpriteSheet:sheet rect:CGRectMake(0.0, 0.0, 144.0, 144.0)];
 		sprite.scaleX = 0.01;
@@ -90,14 +85,28 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 		[sheet addChild:sprite];
 		sprite.position = pos;
 		
-		id s1,s2,s3,s4,s5;
+		id s1,s2;
 		s1 = [CCScaleTo actionWithDuration:1.0f scale:1.1];
 		s2 = [CCScaleTo actionWithDuration:0.2f scale:1.0];
 		[sprite runAction:[CCSequence actions:s1, s2, nil]];
+		
+		int shellCount = random() % 2 + 3;
+		
+		for (int i=0 ; i<shellCount ; i++) {
+			CCSprite *shellSprite = [CCSprite spriteWithFile:@"touchNode_radius.png"];
+			float rot = (float)(random() % 360);
+			shellSprite.position = pos;
+			shellSprite.rotation = rot;
+			shellSprite.blendFunc = (ccBlendFunc){ GL_SRC_ALPHA, GL_ONE };
+			[self addChild:shellSprite];
+			[shellSprite runAction:[CCRepeatForever actionWithAction:[CCRotateBy actionWithDuration:1/15 angle:1.0]]];
+			[shells addObject:shellSprite];
+		}
 	}
 }
 
 - (void)dealloc {
+	[shells release];
 	[super dealloc];
 }
 
@@ -181,6 +190,10 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 
 - (void)setPosition:(CGPoint)pos {
 	[self.sprite setPosition:pos];
+	
+	for (CCSprite *spr in shells) {
+		[spr setPosition:pos];
+	}
 }
 
 - (void)setRotation:(float)rot {

@@ -56,6 +56,8 @@
 		50F4144A10692EE7002A0D5E /* fps_images.png in Resources */ = {isa = PBXBuildFile; fileRef = 50F4144510692EE7002A0D5E /* fps_images.png */; };
 		50F4144B10692EE7002A0D5E /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 50F4144610692EE7002A0D5E /* Icon.png */; };
 		A30EA6CA117E720D001EDE37 /* GameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = A30EA6C9117E720D001EDE37 /* GameScene.m */; };
+		A32BAE3711D5B5CB0066AE51 /* touchNode_center.png in Resources */ = {isa = PBXBuildFile; fileRef = A32BAE3611D5B5CB0066AE51 /* touchNode_center.png */; };
+		A32BAE3911D5B6B50066AE51 /* touchNode_radius.png in Resources */ = {isa = PBXBuildFile; fileRef = A32BAE3811D5B6B50066AE51 /* touchNode_radius.png */; };
 		A3710044117F7BB400C435F8 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = A3710043117F7BB400C435F8 /* Player.m */; };
 		A371004C117F7BBF00C435F8 /* TouchNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A3710047117F7BBF00C435F8 /* TouchNode.m */; };
 		A371004D117F7BBF00C435F8 /* PulseNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A3710049117F7BBF00C435F8 /* PulseNode.m */; };
@@ -230,6 +232,8 @@
 		50F4144710692EE7002A0D5E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A30EA6C8117E720D001EDE37 /* GameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameScene.h; sourceTree = "<group>"; };
 		A30EA6C9117E720D001EDE37 /* GameScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameScene.m; sourceTree = "<group>"; };
+		A32BAE3611D5B5CB0066AE51 /* touchNode_center.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = touchNode_center.png; sourceTree = "<group>"; };
+		A32BAE3811D5B6B50066AE51 /* touchNode_radius.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = touchNode_radius.png; sourceTree = "<group>"; };
 		A3710042117F7BB400C435F8 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
 		A3710043117F7BB400C435F8 /* Player.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Player.m; sourceTree = "<group>"; };
 		A3710046117F7BBF00C435F8 /* TouchNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchNode.h; sourceTree = "<group>"; };
@@ -680,6 +684,8 @@
 				A3710055117F7BD100C435F8 /* touchNode_144.png */,
 				A3710056117F7BD100C435F8 /* pulseNode_144.png */,
 				A3710057117F7BD100C435F8 /* touchNode.png */,
+				A32BAE3811D5B6B50066AE51 /* touchNode_radius.png */,
+				A32BAE3611D5B5CB0066AE51 /* touchNode_center.png */,
 			);
 			name = images;
 			sourceTree = "<group>";
@@ -1043,6 +1049,8 @@
 				A3EF90BD11B5C5F200862B80 /* CMakeLists.txt in Resources */,
 				A3EF910111B5CB1000862B80 /* pulseNode.png in Resources */,
 				A3EF915911B5D5B000862B80 /* pulseNode.plist in Resources */,
+				A32BAE3711D5B5CB0066AE51 /* touchNode_center.png in Resources */,
+				A32BAE3911D5B6B50066AE51 /* touchNode_radius.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

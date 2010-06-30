@@ -241,7 +241,7 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 		[pulseNodes addObject:pulseNode];
 		
 		
-		touchNodeSheet = [[CCSpriteSheet alloc] initWithFile:@"touchNode_144.png" capacity:10];
+		touchNodeSheet = [[CCSpriteSheet alloc] initWithFile:@"touchNode_center.png" capacity:10];
 		[self addChild:touchNodeSheet];
 		
 		for (int i=0 ; i<1 ; i++) {
