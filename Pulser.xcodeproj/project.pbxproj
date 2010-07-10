@@ -56,18 +56,20 @@
 		50F4144A10692EE7002A0D5E /* fps_images.png in Resources */ = {isa = PBXBuildFile; fileRef = 50F4144510692EE7002A0D5E /* fps_images.png */; };
 		50F4144B10692EE7002A0D5E /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 50F4144610692EE7002A0D5E /* Icon.png */; };
 		A30EA6CA117E720D001EDE37 /* GameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = A30EA6C9117E720D001EDE37 /* GameScene.m */; };
-		A32BAE3711D5B5CB0066AE51 /* touchNode_center.png in Resources */ = {isa = PBXBuildFile; fileRef = A32BAE3611D5B5CB0066AE51 /* touchNode_center.png */; };
-		A32BAE3911D5B6B50066AE51 /* touchNode_radius.png in Resources */ = {isa = PBXBuildFile; fileRef = A32BAE3811D5B6B50066AE51 /* touchNode_radius.png */; };
 		A3710044117F7BB400C435F8 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = A3710043117F7BB400C435F8 /* Player.m */; };
 		A371004C117F7BBF00C435F8 /* TouchNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A3710047117F7BBF00C435F8 /* TouchNode.m */; };
 		A371004D117F7BBF00C435F8 /* PulseNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A3710049117F7BBF00C435F8 /* PulseNode.m */; };
 		A371004E117F7BBF00C435F8 /* MeteorNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A371004B117F7BBF00C435F8 /* MeteorNode.m */; };
-		A3710058117F7BD100C435F8 /* touchNode_144.png in Resources */ = {isa = PBXBuildFile; fileRef = A3710055117F7BD100C435F8 /* touchNode_144.png */; };
 		A3710059117F7BD100C435F8 /* pulseNode_144.png in Resources */ = {isa = PBXBuildFile; fileRef = A3710056117F7BD100C435F8 /* pulseNode_144.png */; };
-		A371005A117F7BD100C435F8 /* touchNode.png in Resources */ = {isa = PBXBuildFile; fileRef = A3710057117F7BD100C435F8 /* touchNode.png */; };
 		A371005C117F7BDB00C435F8 /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = A371005B117F7BDB00C435F8 /* fire.png */; };
 		A371005F117F7CC400C435F8 /* GameLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A371005E117F7CC400C435F8 /* GameLayer.m */; };
 		A3C2823E11B4455400D94B79 /* tapCircle.png in Resources */ = {isa = PBXBuildFile; fileRef = A3C2823D11B4455400D94B79 /* tapCircle.png */; };
+		A3E4EC7711E7927C002023D0 /* Background1.png in Resources */ = {isa = PBXBuildFile; fileRef = A3E4EC7611E7927C002023D0 /* Background1.png */; };
+		A3E4EC8711E7955F002023D0 /* BackgroundLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E4EC8611E7955F002023D0 /* BackgroundLayer.m */; };
+		A3E4EC8911E7B5E4002023D0 /* BackgroundEmitter.plist in Resources */ = {isa = PBXBuildFile; fileRef = A3E4EC8811E7B5E4002023D0 /* BackgroundEmitter.plist */; };
+		A3E4ECBB11E7C915002023D0 /* BlendSheet.png in Resources */ = {isa = PBXBuildFile; fileRef = A3E4ECB911E7C915002023D0 /* BlendSheet.png */; };
+		A3E4ECBC11E7C915002023D0 /* NoBlendSheet.png in Resources */ = {isa = PBXBuildFile; fileRef = A3E4ECBA11E7C915002023D0 /* NoBlendSheet.png */; };
+		A3E4ECE411E7E61B002023D0 /* Kamikaze.plist in Resources */ = {isa = PBXBuildFile; fileRef = A3E4ECE311E7E61B002023D0 /* Kamikaze.plist */; };
 		A3EF8F2811B5B46C00862B80 /* SpriteAutoRemoval.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EF8F2711B5B46C00862B80 /* SpriteAutoRemoval.m */; };
 		A3EF900311B5C52200862B80 /* CCAction.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EF8F7111B5C52200862B80 /* CCAction.m */; };
 		A3EF900411B5C52200862B80 /* CCActionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EF8F7311B5C52200862B80 /* CCActionManager.m */; };
@@ -232,8 +234,6 @@
 		50F4144710692EE7002A0D5E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A30EA6C8117E720D001EDE37 /* GameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameScene.h; sourceTree = "<group>"; };
 		A30EA6C9117E720D001EDE37 /* GameScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameScene.m; sourceTree = "<group>"; };
-		A32BAE3611D5B5CB0066AE51 /* touchNode_center.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = touchNode_center.png; sourceTree = "<group>"; };
-		A32BAE3811D5B6B50066AE51 /* touchNode_radius.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = touchNode_radius.png; sourceTree = "<group>"; };
 		A3710042117F7BB400C435F8 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
 		A3710043117F7BB400C435F8 /* Player.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Player.m; sourceTree = "<group>"; };
 		A3710046117F7BBF00C435F8 /* TouchNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchNode.h; sourceTree = "<group>"; };
@@ -242,13 +242,18 @@
 		A3710049117F7BBF00C435F8 /* PulseNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PulseNode.m; sourceTree = "<group>"; };
 		A371004A117F7BBF00C435F8 /* MeteorNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeteorNode.h; sourceTree = "<group>"; };
 		A371004B117F7BBF00C435F8 /* MeteorNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeteorNode.m; sourceTree = "<group>"; };
-		A3710055117F7BD100C435F8 /* touchNode_144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = touchNode_144.png; sourceTree = "<group>"; };
 		A3710056117F7BD100C435F8 /* pulseNode_144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pulseNode_144.png; sourceTree = "<group>"; };
-		A3710057117F7BD100C435F8 /* touchNode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = touchNode.png; sourceTree = "<group>"; };
 		A371005B117F7BDB00C435F8 /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fire.png; sourceTree = "<group>"; };
 		A371005D117F7CC400C435F8 /* GameLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameLayer.h; sourceTree = "<group>"; };
 		A371005E117F7CC400C435F8 /* GameLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameLayer.m; sourceTree = "<group>"; };
 		A3C2823D11B4455400D94B79 /* tapCircle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tapCircle.png; sourceTree = "<group>"; };
+		A3E4EC7611E7927C002023D0 /* Background1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Background1.png; sourceTree = "<group>"; };
+		A3E4EC8511E7955F002023D0 /* BackgroundLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundLayer.h; sourceTree = "<group>"; };
+		A3E4EC8611E7955F002023D0 /* BackgroundLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackgroundLayer.m; sourceTree = "<group>"; };
+		A3E4EC8811E7B5E4002023D0 /* BackgroundEmitter.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BackgroundEmitter.plist; sourceTree = "<group>"; };
+		A3E4ECB911E7C915002023D0 /* BlendSheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BlendSheet.png; sourceTree = "<group>"; };
+		A3E4ECBA11E7C915002023D0 /* NoBlendSheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NoBlendSheet.png; sourceTree = "<group>"; };
+		A3E4ECE311E7E61B002023D0 /* Kamikaze.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Kamikaze.plist; sourceTree = "<group>"; };
 		A3EB580F1180CE43005F197D /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		A3EF8F2611B5B46C00862B80 /* SpriteAutoRemoval.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpriteAutoRemoval.h; sourceTree = "<group>"; };
 		A3EF8F2711B5B46C00862B80 /* SpriteAutoRemoval.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpriteAutoRemoval.m; sourceTree = "<group>"; };
@@ -558,6 +563,8 @@
 				A371005E117F7CC400C435F8 /* GameLayer.m */,
 				1F3B9A2C0EF2145700286867 /* PulserAppDelegate.h */,
 				507022A2107672FA00393637 /* PulserAppDelegate.m */,
+				A3E4EC8511E7955F002023D0 /* BackgroundLayer.h */,
+				A3E4EC8611E7955F002023D0 /* BackgroundLayer.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -650,7 +657,9 @@
 		50F4144210692EE7002A0D5E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A3E4ECE311E7E61B002023D0 /* Kamikaze.plist */,
 				A3EF915811B5D5B000862B80 /* pulseNode.plist */,
+				A3E4EC8811E7B5E4002023D0 /* BackgroundEmitter.plist */,
 				A3710054117F7BD100C435F8 /* images */,
 				A371005B117F7BDB00C435F8 /* fire.png */,
 				A3EF910011B5CB1000862B80 /* pulseNode.png */,
@@ -680,12 +689,11 @@
 		A3710054117F7BD100C435F8 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				A3E4ECB911E7C915002023D0 /* BlendSheet.png */,
+				A3E4ECBA11E7C915002023D0 /* NoBlendSheet.png */,
+				A3E4EC7611E7927C002023D0 /* Background1.png */,
 				A3C2823D11B4455400D94B79 /* tapCircle.png */,
-				A3710055117F7BD100C435F8 /* touchNode_144.png */,
 				A3710056117F7BD100C435F8 /* pulseNode_144.png */,
-				A3710057117F7BD100C435F8 /* touchNode.png */,
-				A32BAE3811D5B6B50066AE51 /* touchNode_radius.png */,
-				A32BAE3611D5B5CB0066AE51 /* touchNode_center.png */,
 			);
 			name = images;
 			sourceTree = "<group>";
@@ -1041,16 +1049,17 @@
 				50F4144910692EE7002A0D5E /* Default.png in Resources */,
 				50F4144A10692EE7002A0D5E /* fps_images.png in Resources */,
 				50F4144B10692EE7002A0D5E /* Icon.png in Resources */,
-				A3710058117F7BD100C435F8 /* touchNode_144.png in Resources */,
 				A3710059117F7BD100C435F8 /* pulseNode_144.png in Resources */,
-				A371005A117F7BD100C435F8 /* touchNode.png in Resources */,
 				A371005C117F7BDB00C435F8 /* fire.png in Resources */,
 				A3C2823E11B4455400D94B79 /* tapCircle.png in Resources */,
 				A3EF90BD11B5C5F200862B80 /* CMakeLists.txt in Resources */,
 				A3EF910111B5CB1000862B80 /* pulseNode.png in Resources */,
 				A3EF915911B5D5B000862B80 /* pulseNode.plist in Resources */,
-				A32BAE3711D5B5CB0066AE51 /* touchNode_center.png in Resources */,
-				A32BAE3911D5B6B50066AE51 /* touchNode_radius.png in Resources */,
+				A3E4EC7711E7927C002023D0 /* Background1.png in Resources */,
+				A3E4EC8911E7B5E4002023D0 /* BackgroundEmitter.plist in Resources */,
+				A3E4ECBB11E7C915002023D0 /* BlendSheet.png in Resources */,
+				A3E4ECBC11E7C915002023D0 /* NoBlendSheet.png in Resources */,
+				A3E4ECE411E7E61B002023D0 /* Kamikaze.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1161,6 +1170,7 @@
 				A3EF90D111B5C5F200862B80 /* cpSpace.c in Sources */,
 				A3EF90D211B5C5F200862B80 /* cpSpaceHash.c in Sources */,
 				A3EF90D311B5C5F200862B80 /* cpVect.c in Sources */,
+				A3E4EC8711E7955F002023D0 /* BackgroundLayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1288,7 +1298,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Matthew Mcgoogan (E5T7U9AUM3)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Matthew Mcgoogan (E5T7U9AUM3)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_THUMB_SUPPORT = NO;
 				"GCC_THUMB_SUPPORT[arch=armv6]" = NO;
@@ -1297,6 +1308,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
+				PROVISIONING_PROFILE = "775F9254-603E-4A75-AC6B-938346D5DBE6";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "775F9254-603E-4A75-AC6B-938346D5DBE6";
 				SDKROOT = iphoneos3.2;
 				TARGETED_DEVICE_FAMILY = 2;
 			};

@@ -11,15 +11,20 @@
 #import "chipmunk.h"
 @class Player;
 @class PulseNode;
+@class BackgroundLayer;
 
 @interface GameLayer : CCLayer {
 	cpSpace *space;
 	
+	BackgroundLayer *bgLayer;
+	
 	Player *player;
 	NSMutableArray *pulseNodes;
-	CCSpriteSheet *touchNodeSheet;
 	
 	CCLabel *scoreLabel;
+	
+	CCSpriteSheet *blendSheet;
+	CCSpriteSheet *noBlendSheet;
 	
 	@private
 	int score;
@@ -28,7 +33,8 @@
 
 @property (nonatomic, readonly) NSMutableArray *pulseNodes;
 @property (nonatomic, readonly) Player *player;
-@property (nonatomic, readonly) CCSpriteSheet *touchNodeSheet;
+@property (nonatomic, retain) CCSpriteSheet *blendSheet;
+@property (nonatomic, retain) CCSpriteSheet *noBlendSheet;
 
 // Chipmunk
 - (void)mainStep:(ccTime) dt;

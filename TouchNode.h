@@ -10,6 +10,7 @@
 #import "cocos2d.h"
 #import "chipmunk.h"
 @class Player;
+@class GameLayer;
 
 #define TOUCHNODE_RADIUS 46.0f
 #define TOUCHNODE_MASS 50.0f
@@ -24,8 +25,11 @@ typedef enum BoundType {
 
 @interface TouchNode : CCLayer {
 	CCSprite *sprite;
-	CCParticleSystem *particleSystem;
+	CCSprite *center;
+	CCPointParticleSystem *kamikazeSystem;
 	Player *player;
+	GameLayer *controller;
+	
 	
 	cpShape *shape;
 	cpSpace *_space;
@@ -34,17 +38,24 @@ typedef enum BoundType {
 	CGPoint touchStart;
 	CGPoint touchCurrent;
 	NSMutableArray *shells;
+	
+	NSTimer *kamikazeTimer;
+	BOOL kamikazeModeActive;
 }
 
-@property (nonatomic, retain) CCParticleSystem *particleSystem;
 @property (nonatomic, retain) CCSprite *sprite;
 @property (nonatomic, retain) Player *player;
 @property (nonatomic, readonly) cpShape *shape;
+@property (nonatomic, retain) GameLayer *controller;
 
 // Initializing/Creating TouchNode
-+ (id)nodeWithPosition:(CGPoint)pos sheet:(CCSpriteSheet *)sheet space:(cpSpace *)space;
-- (id)initWithSpritePosition:(CGPoint)pos sheet:(CCSpriteSheet *)sheet space:(cpSpace *)space;
-- (void)initSpriteWithPosition:(CGPoint)pos sheet:(CCSpriteSheet *)sheet;
++ (id)nodeWithPosition:(CGPoint)pos controller:(GameLayer *)gameController space:(cpSpace *)space;
+- (id)initWithSpritePosition:(CGPoint)pos controller:(GameLayer *)gameController space:(cpSpace *)space;
+- (void)initSpriteWithPosition:(CGPoint)pos;
+
+// Kamikaze Mode
+- (void)activateKamikaze;
+- (void)deactivateKamikaze;
 
 // Chipmunk
 - (void)setPosition:(CGPoint)pos;
@@ -52,6 +63,8 @@ typedef enum BoundType {
 // Changing color of node
 - (void)tintNode:(UIColor *)color;
 - (void)tintNodeBasedOnMeteorProximity:(NSArray *)meteors;
+
+- (void)prepForRemoval;
 
 
 @end

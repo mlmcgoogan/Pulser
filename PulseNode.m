@@ -28,7 +28,7 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 
 @implementation PulseNode
 
-@synthesize particleSystem, meteors, player;
+@synthesize particleSystem, meteors, player, controller;
 
 - (id)initWithPosition:(CGPoint)pos space:(cpSpace *)space {
 	if ((self = [super init])) {
@@ -44,6 +44,7 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 		shape = cpCircleShapeNew(body, PULSENODE_RADIUS, cpvzero);
 		shape->u = 0.1;
 		shape->e = 0.8;
+		shape->collision_type = PULSENODE_COL_GROUP;
 		shape->data	 = self;
 		
 		cpSpaceAddBody(space, body);
@@ -55,14 +56,6 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 		
 		cpConstraint *joint = cpPinJointNew(pathBody, body, cpvzero, cpvzero);
 		cpSpaceAddConstraint(space, joint);
-		
-		
-		/*
-		particleSystem = [[CCParticleGalaxy alloc] initWithTotalParticles:100];
-		particleSystem.startSize = 64.0;
-		particleSystem.position = pos;
-		particleSystem.startColorVar = ccc4FFromccc4B(ccc4(120,60,80,0));*/
-		
 		
 		particleSystem = [[CCQuadParticleSystem alloc] initWithFile:@"pulseNode.plist"];
 		particleSystem.position = pos;

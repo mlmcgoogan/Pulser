@@ -45,7 +45,10 @@
 		particleSystem.startSize = 64;
 		particleSystem.gravity = grav;
 		particleSystem.position = startPos;
-		particleSystem.startColorVar = ccc4FFromccc4B(ccc4(120,60,80,0));
+		particleSystem.startColor = ccc4FFromccc4B(ccc4(0,0,117,255));
+		particleSystem.startColorVar = ccc4FFromccc4B(ccc4(158,0,0,0));
+		particleSystem.endColor = ccc4FFromccc4B(ccc4(97,148,255,255));
+		particleSystem.endColorVar = ccc4FFromccc4B(ccc4(255,0,178,0));
 		start = startPos;
 		unitVector = dirUnitVec;
 		

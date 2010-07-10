@@ -34,10 +34,10 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 
 @implementation TouchNode
 
-@synthesize sprite, particleSystem, player, shape;
+@synthesize sprite, player, shape, controller;
 
-+ (id)nodeWithPosition:(CGPoint)pos sheet:(CCSpriteSheet *)sheet space:(cpSpace *)space {
-	return [[[self alloc] initWithSpritePosition:pos sheet:(CCSpriteSheet *)sheet space:space] autorelease];
++ (id)nodeWithPosition:(CGPoint)pos controller:(GameLayer *)gameController space:(cpSpace *)space {
+	return [[[self alloc] initWithSpritePosition:pos controller:gameController space:space] autorelease];
 }
 
 - (id) init {
@@ -49,8 +49,13 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 	return self;
 }
 
-- (id)initWithSpritePosition:(CGPoint)pos sheet:(CCSpriteSheet *)sheet space:(cpSpace *)space {
+- (id)initWithSpritePosition:(CGPoint)pos controller:(GameLayer *)gameController space:(cpSpace *)space {
 	if ((self = [self init])) {
+		
+		kamikazeSystem = nil;
+		kamikazeModeActive = NO;
+		kamikazeTimer = nil;
+		controller = [gameController retain];
 		
 		shells = [[NSMutableArray alloc] init];
 		
@@ -70,42 +75,80 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 		cpSpaceAddBody(space, body);
 		cpSpaceAddShape(space, shape);
 		
-		[self initSpriteWithPosition:pos sheet:sheet];
+		[self initSpriteWithPosition:pos];
 	}
 	
 	return self;
 }
-
-- (void)initSpriteWithPosition:(CGPoint)pos sheet:(CCSpriteSheet *)sheet {
+// 130.128
+- (void)initSpriteWithPosition:(CGPoint)pos {
 	if (!sprite) {
 		
-		sprite = [[CCSprite alloc] initWithSpriteSheet:sheet rect:CGRectMake(0.0, 0.0, 144.0, 144.0)];
-		sprite.scaleX = 0.01;
-		sprite.scaleY = 0.01;
-		[sheet addChild:sprite];
+		CCSpriteSheet *blendSheet = [controller blendSheet];
+		CCSpriteSheet *noBlendSheet = [controller noBlendSheet];
+		
+		sprite = [[CCSprite alloc] initWithSpriteSheet:noBlendSheet rect:CGRectMake(0.0, 0.0, 130.0, 128.0)];
+		//sprite.scaleX = 0.01;
+		//sprite.scaleY = 0.01;
+		[noBlendSheet addChild:sprite];
 		sprite.position = pos;
 		
+		center = [[CCSprite alloc] initWithSpriteSheet:noBlendSheet rect:CGRectMake(130.0, 0.0, 130.0, 128.0)];
+		[noBlendSheet addChild:center];
+		center.position = pos;
+		
+		/*
 		id s1,s2;
 		s1 = [CCScaleTo actionWithDuration:1.0f scale:1.1];
 		s2 = [CCScaleTo actionWithDuration:0.2f scale:1.0];
-		[sprite runAction:[CCSequence actions:s1, s2, nil]];
+		[sprite runAction:[CCSequence actions:s1, s2, nil]];*/
 		
-		int shellCount = random() % 2 + 3;
+		int outerShellCount = 0;
+		int innerShellCount = 8;
+		float speed = (float)(random() % 15 + 15);
 		
-		for (int i=0 ; i<shellCount ; i++) {
-			CCSprite *shellSprite = [CCSprite spriteWithFile:@"touchNode_radius.png"];
+		for (int i=0 ; i<outerShellCount ; i++) {
+			speed = (float)(random() % 15 + 15);
+			float shellSize = random() % 10 > 4 ? 390.0 : 260.0;
+			float rotDir = random() & 10 > 4 ? 1.0 : -1.0;
+			CCSprite *shellSprite = [CCSprite spriteWithSpriteSheet:blendSheet rect:CGRectMake(shellSize, 0.0, 130.0, 128.0)];
 			float rot = (float)(random() % 360);
 			shellSprite.position = pos;
 			shellSprite.rotation = rot;
-			shellSprite.blendFunc = (ccBlendFunc){ GL_SRC_ALPHA, GL_ONE };
-			[self addChild:shellSprite];
-			[shellSprite runAction:[CCRepeatForever actionWithAction:[CCRotateBy actionWithDuration:1/15 angle:1.0]]];
+			[shellSprite runAction:[CCRepeatForever actionWithAction:[CCRotateBy actionWithDuration:1/speed angle:rotDir]]];
 			[shells addObject:shellSprite];
+			[blendSheet addChild:shellSprite z:0];
+		}
+		speed = 10.0;
+		float rotDir = 1.0;
+		for (int i=0 ; i<innerShellCount ; i++) {
+			speed += (float)(random() % 15 + 15);
+			float shellSize;
+			
+			if (i < innerShellCount / 3) {
+				shellSize = 780.0;
+			}
+			else if (i < innerShellCount / 3 * 2) {
+				shellSize = 650.0;
+			}
+			else {
+				shellSize = 520.0;
+			}
+			
+			rotDir = -rotDir;
+			CCSprite *shellSprite = [CCSprite spriteWithSpriteSheet:blendSheet rect:CGRectMake(shellSize, 0.0, 130.0, 128.0)];
+			float rot = (float)(random() % 360);
+			shellSprite.position = pos;
+			shellSprite.rotation = rot;
+			[shellSprite runAction:[CCRepeatForever actionWithAction:[CCRotateBy actionWithDuration:1/speed angle:rotDir]]];
+			[shells addObject:shellSprite];
+			[blendSheet addChild:shellSprite];
 		}
 	}
 }
 
 - (void)dealloc {
+	[controller release];
 	[shells release];
 	[super dealloc];
 }
@@ -138,8 +181,26 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 			newComps[i] = colorComponents[i] * 255.0;
 		}
 		
+		for (CCSprite *shellSprite in shells) {
+			CGFloat r,g,b;
+			r = 140.0 + (float)(random() % 80 - 30);
+			g = 140.0 + (float)(random() % 80 - 30);
+			b = 255.0;
+			id<CCRGBAProtocol> stn = (id<CCRGBAProtocol>)shellSprite;
+			[stn setColor:ccc3((GLubyte)r, (GLubyte)g, (GLubyte)b)];
+		}
+		
 		id<CCRGBAProtocol> tn = (id<CCRGBAProtocol>)sprite;
 		[tn setColor:ccc3((GLubyte)newComps[0], (GLubyte)newComps[1], (GLubyte)newComps[2])];
+		tn = (id<CCRGBAProtocol>)center;
+		[tn setColor:ccc3((GLubyte)newComps[0], (GLubyte)newComps[1], (GLubyte)newComps[2])];
+		
+		if (kamikazeModeActive) {
+			for (CCSprite *shell in shells) {
+				id<CCRGBAProtocol> tn = (id<CCRGBAProtocol>)shell;
+				[tn setColor:ccc3((GLubyte)newComps[0], (GLubyte)newComps[1], (GLubyte)newComps[2])];
+			}
+		}
 	}
 }
 
@@ -147,7 +208,7 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 #define DEFAULT_COLOR ccc3(66,103,223)
 
 - (void)tintNodeBasedOnMeteorProximity:(NSArray *)meteors {
-	id<CCRGBAProtocol> tn = (id<CCRGBAProtocol>)sprite;
+	id<CCRGBAProtocol> tn = (id<CCRGBAProtocol>)center;
 	ccColor3B color = [tn color];
 	
 	MeteorNode *closest = nil;
@@ -190,9 +251,14 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 
 - (void)setPosition:(CGPoint)pos {
 	[self.sprite setPosition:pos];
+	[center setPosition:pos];
 	
 	for (CCSprite *spr in shells) {
 		[spr setPosition:pos];
+	}
+	
+	if (kamikazeModeActive) {
+		kamikazeSystem.position = pos;
 	}
 }
 
@@ -216,6 +282,11 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 	if (delta < TOUCHNODE_RADIUS) {
 		touchStart = pos;
 		shouldCatch = YES;
+		
+		if (!kamikazeModeActive) {
+			kamikazeTimer = [NSTimer timerWithTimeInterval:2.5 target:self selector:@selector(activateKamikaze) userInfo:nil repeats:NO];
+			[[NSRunLoop mainRunLoop] addTimer:kamikazeTimer forMode:NSDefaultRunLoopMode];
+		}
 	}
 	
 	return shouldCatch;
@@ -224,9 +295,19 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 - (void)ccTouchMoved:(UITouch *)touch withEvent:(UIEvent *)event {
 	CGPoint pos = [self localTouchPoint:touch];
 	touchCurrent = pos;
+	
+	if (fabsf(ccpDistance(touchCurrent, touchStart)) > 10.0 && kamikazeTimer != nil) {
+		[kamikazeTimer invalidate];
+		kamikazeTimer = nil;
+	}
 }
 
 - (void)ccTouchEnded:(UITouch *)touch withEvent:(UIEvent *)event {
+	if (kamikazeTimer != nil) {
+		[kamikazeTimer invalidate];
+		kamikazeTimer = nil;
+	}
+	
 	touchCurrent = CGPointZero;
 	CGPoint pos = [self localTouchPoint:touch];
 	
@@ -236,6 +317,45 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 	vect = ccpMult(vect, mag);
 	
 	cpBodyApplyImpulse(self.shape->body, vect, cpvzero);
+}
+
+#pragma mark -
+#pragma mark Removal
+
+- (void)prepForRemoval {
+	CCSpriteSheet *blendSheet = [controller blendSheet];
+	CCSpriteSheet *noBlendSheet = [controller noBlendSheet];
+	
+	[noBlendSheet removeChild:sprite cleanup:YES];
+	[noBlendSheet removeChild:center cleanup:YES];
+	for (CCSprite *spr in shells)
+		[blendSheet removeChild:spr cleanup:YES];
+	
+	if (kamikazeModeActive)
+		[self deactivateKamikaze];
+}
+
+#pragma mark -
+#pragma mark Kamikaze Mode
+
+- (void)activateKamikaze {
+	kamikazeTimer = nil;
+	
+	shape->collision_type = KAMIKAZE_COL_GROUP;
+	
+	kamikazeSystem = [[CCPointParticleSystem alloc] initWithFile:@"Kamikaze.plist"];
+	kamikazeSystem.position = sprite.position;
+	
+	[self tintNode:[UIColor redColor]];
+	[controller addChild:kamikazeSystem z:0];
+	
+	kamikazeModeActive = YES;
+}
+
+- (void)deactivateKamikaze {
+	[controller removeChild:kamikazeSystem cleanup:YES];
+	[kamikazeSystem release];
+	kamikazeSystem = nil;
 }
 
 @end

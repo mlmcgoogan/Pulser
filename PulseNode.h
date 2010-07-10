@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "cocos2d.h"
 #import "chipmunk.h"
+@class GameLayer;
 @class MeteorNode;
 @class Player;
 
@@ -20,6 +21,7 @@
 	cpShape *shape;
 	NSMutableArray *meteors;
 	Player *player;
+	GameLayer *controller;
 	
 	@private
 	cpSpace *_space;
@@ -30,6 +32,7 @@
 @property (nonatomic, retain) CCQuadParticleSystem *particleSystem;
 @property (nonatomic, readonly) NSMutableArray *meteors;
 @property (nonatomic, retain) Player *player;
+@property (nonatomic, retain) GameLayer *controller;
 
 - (id)initWithPosition:(CGPoint)pos space:(cpSpace *)space;
 

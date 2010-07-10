@@ -13,6 +13,7 @@
 #import "MeteorNode.h"
 #import "Constants.h"
 #import "SpriteAutoRemoval.h"
+#import "BackgroundLayer.h"
 
 #define SCORELABEL_PADDING 24.0
 
@@ -22,6 +23,7 @@
 // Declarations
 static void postStepMeteorRemoval(cpSpace *space, cpShape *shape, void *unused);
 static void postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused);
+static void postStepPulseNodeRemoval(cpSpace *space, cpShape *shape, void *unused);
 
 // Updating sprites
 static void
@@ -89,7 +91,7 @@ meteorTouchCollisionBegin(cpArbiter *arb, cpSpace *space, void *unused)
 	
 	GameLayer *gLayer = (GameLayer *)unused;
 	
-	cpSpaceAddPostStepCallback(space, (cpPostStepFunc)postStepTouchNodeRemoval, touchNode, gLayer);
+	cpSpaceAddPostStepCallback(space, (cpPostStepFunc)postStepTouchNodeRemoval, touchNode, NULL);
 	cpSpaceAddPostStepCallback(space, (cpPostStepFunc)postStepMeteorRemoval, meteor, NULL);
 	
 	[gLayer addCollisionAtPosition:cpArbiterGetPoint(arb, 0)];
@@ -101,11 +103,79 @@ static void
 postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 {
 	TouchNode *tNode = (TouchNode *)shape->data;
-	GameLayer *gLayer = (GameLayer *)unused;
+	GameLayer *gLayer = tNode.controller;
 	
+	[tNode prepForRemoval];
 	[gLayer removeChild:tNode cleanup:YES];
-	[gLayer.touchNodeSheet removeChild:tNode.sprite cleanup:YES];
 	[gLayer.player removeTouchNode:tNode];
+	
+	cpSpaceRemoveBody(space, shape->body);
+	cpBodyFree(shape->body);
+	
+	cpSpaceRemoveShape(space, shape);
+	cpShapeFree(shape);
+}
+
+#pragma mark Kamikaze Collisions
+
+static int
+kamikazeTouchCollisionBegin(cpArbiter *arb, cpSpace *space, void *unused)
+{
+	cpShape *kamikaze, *touch;
+	cpArbiterGetShapes(arb, &kamikaze, &touch);
+	
+	cpSpaceAddPostStepCallback(space, (cpPostStepFunc)postStepTouchNodeRemoval, kamikaze, NULL);
+	cpSpaceAddPostStepCallback(space, (cpPostStepFunc)postStepTouchNodeRemoval, touch, NULL);
+	
+	TouchNode *tNode = (TouchNode *)kamikaze->data;
+	[tNode.controller addCollisionAtPosition:cpArbiterGetPoint(arb, 0)];
+}
+
+static int
+kamikazeMeteorCollisionBegin(cpArbiter *arb, cpSpace *space, void *unused)
+{
+	cpShape *kamikaze, *meteor;
+	cpArbiterGetShapes(arb, &kamikaze, &meteor);
+	
+	cpSpaceAddPostStepCallback(space, (cpPostStepFunc)postStepTouchNodeRemoval, kamikaze, NULL);
+	cpSpaceAddPostStepCallback(space, (cpPostStepFunc)postStepMeteorRemoval, meteor, NULL);
+	
+	TouchNode *tNode = (TouchNode *)kamikaze->data;
+	[tNode.controller addCollisionAtPosition:cpArbiterGetPoint(arb, 0)];
+}
+
+static int
+kamikazeBoundaryCollisionBegin(cpArbiter *arb, cpSpace *space, void *unused)
+{
+	cpShape *kamikaze, *other;
+	cpArbiterGetShapes(arb, &kamikaze, &other);
+	
+	cpSpaceAddPostStepCallback(space, (cpPostStepFunc)postStepTouchNodeRemoval, kamikaze, NULL);
+	
+	TouchNode *tNode = (TouchNode *)kamikaze->data;
+	[tNode.controller addCollisionAtPosition:cpArbiterGetPoint(arb, 0)];
+}
+
+static int
+kamikazePulseCollisionBegin(cpArbiter *arb, cpSpace *space, void *unused)
+{
+	cpShape *kamikaze, *pulse;
+	cpArbiterGetShapes(arb, &kamikaze, &pulse);
+	
+	cpSpaceAddPostStepCallback(space, (cpPostStepFunc)postStepTouchNodeRemoval, kamikaze, NULL);
+	cpSpaceAddPostStepCallback(space, (cpPostStepFunc)postStepPulseNodeRemoval, pulse, NULL);
+	
+	TouchNode *tNode = (TouchNode *)kamikaze->data;
+	[tNode.controller addCollisionAtPosition:cpArbiterGetPoint(arb, 0)];
+}
+
+static void
+postStepPulseNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
+{
+	PulseNode *pNode = (PulseNode *)shape->data;
+	GameLayer *gLayer = pNode.controller;
+	
+	[gLayer removeChild:pNode cleanup:YES];
 	
 	cpSpaceRemoveBody(space, shape->body);
 	cpBodyFree(shape->body);
@@ -120,7 +190,7 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 
 @implementation GameLayer
 
-@synthesize pulseNodes, player, touchNodeSheet;
+@synthesize pulseNodes, player, blendSheet, noBlendSheet;
 
 - (id)init {
 	if ((self = [super init])) {
@@ -232,22 +302,30 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 		 ** GAME ASSETS INIT
 		 *****/
 		
+		noBlendSheet = [[CCSpriteSheet alloc] initWithFile:@"NoBlendSheet.png" capacity:20];
+		[self addChild:noBlendSheet];
+		
+		blendSheet = [[CCSpriteSheet alloc] initWithFile:@"BlendSheet.png" capacity:40];
+		blendSheet.blendFunc = (ccBlendFunc){ GL_ONE, GL_ONE };
+		[self addChild:blendSheet];
+		
+		bgLayer = [[BackgroundLayer alloc] init];
+		[self addChild:bgLayer z:0];
+		
 		player = [[Player alloc] init];
 		[player setColor:[UIColor colorWithRed:0.259 green:0.404 blue:0.875 alpha:1.0]];
 		
 		CGSize s = [[CCDirector sharedDirector] winSize];
 		PulseNode *pulseNode = [[PulseNode alloc] initWithPosition:CGPointMake(85.0, (s.height / 2.0)) space:space];
 		pulseNode.player = player;
+		pulseNode.controller = self;
 		[pulseNodes addObject:pulseNode];
 		
-		
-		touchNodeSheet = [[CCSpriteSheet alloc] initWithFile:@"touchNode_center.png" capacity:10];
-		[self addChild:touchNodeSheet];
 		
 		for (int i=0 ; i<1 ; i++) {
 			CGFloat x = (float)(random() % 700) + 200.0;
 			CGFloat y = (float)(random() % 500) + 100.0;
-			TouchNode *node = [TouchNode nodeWithPosition:ccp(x,y) sheet:touchNodeSheet space:space];
+			TouchNode *node = [TouchNode nodeWithPosition:ccp(x,y) controller:self space:space];
 			[self addChild:node];
 			[player addTouchNode:node];
 		}
@@ -264,6 +342,10 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 		cpSpaceAddCollisionHandler(space, REMOVAL_SENSOR_COL_GROUP, METEOR_COL_GROUP, meteorRemovalBegin, NULL, NULL, NULL, pulseNodes);
 		cpSpaceAddCollisionHandler(space, BOUNDARY_COL_GROUP, METEOR_COL_GROUP, meteorBoundaryIgnoreBegin, NULL, NULL, NULL, NULL);
 		cpSpaceAddCollisionHandler(space, METEOR_COL_GROUP, TOUCHNODE_COL_GROUP, meteorTouchCollisionBegin, NULL, NULL, NULL, self);
+		cpSpaceAddCollisionHandler(space, KAMIKAZE_COL_GROUP, TOUCHNODE_COL_GROUP, kamikazeTouchCollisionBegin, NULL, NULL, NULL, NULL);
+		cpSpaceAddCollisionHandler(space, KAMIKAZE_COL_GROUP, METEOR_COL_GROUP, kamikazeMeteorCollisionBegin, NULL, NULL, NULL, NULL);
+		cpSpaceAddCollisionHandler(space, KAMIKAZE_COL_GROUP, BOUNDARY_COL_GROUP, kamikazeBoundaryCollisionBegin, NULL, NULL, NULL, NULL);
+		cpSpaceAddCollisionHandler(space, KAMIKAZE_COL_GROUP, PULSENODE_COL_GROUP, kamikazePulseCollisionBegin, NULL, NULL, NULL, NULL);
 		
 		[self addChild:pulseNode];
 	}
@@ -272,7 +354,9 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 }
 
 - (void)dealloc {
-	[touchNodeSheet release];
+	[bgLayer release];
+	[blendSheet release];
+	[noBlendSheet release];
 	[player release];
 	[pulseNodes release];
 	[super dealloc];
@@ -285,6 +369,7 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
 	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+	
 	
 	[self schedule:@selector(mainStep:)];
 	[self schedule:@selector(addTouchNodeStep:) interval:5.0];
@@ -353,7 +438,7 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 - (void)addTouchNode {
 	CGFloat x = (float)(random() % 700) + 200.0;
 	CGFloat y = (float)(random() % 500) + 100.0;
-	TouchNode *node = [TouchNode nodeWithPosition:ccp(x,y) sheet:touchNodeSheet space:space];
+	TouchNode *node = [TouchNode nodeWithPosition:ccp(x,y) controller:self space:space];
 	[self addChild:node];
 	[player addTouchNode:node];
 }
