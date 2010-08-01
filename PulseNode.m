@@ -54,7 +54,7 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 		pathBody = cpBodyNew(INFINITY, INFINITY);
 		pathBody->p = ccpAdd(pos, ccp(100.0,0.0));
 		
-		cpConstraint *joint = cpPinJointNew(pathBody, body, cpvzero, cpvzero);
+		joint = cpPinJointNew(pathBody, body, cpvzero, cpvzero);
 		cpSpaceAddConstraint(space, joint);
 		
 		particleSystem = [[CCQuadParticleSystem alloc] initWithFile:@"pulseNode.plist"];
@@ -75,7 +75,7 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 - (void)onEnter {
 	[super onEnter];
 	
-	[self schedule:@selector(launchMeteorStep:) interval:2.0f];
+	[self schedule:@selector(launchMeteorStep:) interval:5.0f];
 	[self schedule:@selector(updateStep:)];
 }
 
@@ -147,6 +147,17 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 - (void)removeMeteor:(MeteorNode *)meteor {
 	[meteors removeObject:meteor];
 	[self removeChild:meteor cleanup:YES];
+}
+
+#pragma mark -
+#pragma mark Removing PulseNode
+
+- (void)prepForRemoval {
+	cpSpaceRemoveConstraint(_space, joint);
+	cpConstraintFree(joint);
+	
+	cpSpaceRemoveBody(_space, pathBody);
+	cpBodyFree(pathBody);
 }
 
 @end

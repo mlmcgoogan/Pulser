@@ -28,7 +28,6 @@
 #import "CCNode.h"
 #import "ccTypes.h"
 #import "ccConfig.h"
-#import "chipmunk.h"
 
 #if CC_ENABLE_PROFILERS
 @class CCProfilingTimer;
@@ -57,9 +56,6 @@ enum {
 	
 	/** Radius mode (B mode) */
 	kCCParticleModeRadius,	
-	
-	/** Physics mode (C mode) */
-	kCCParticleModePhysics,
 };
 
 
@@ -112,11 +108,6 @@ typedef struct sCCParticle {
 			float		radius;
 			float		deltaRadius;
 		} B;
-		
-		// Mode C: physics mode
-		struct {
-			cpShape *shape;
-		} C;
 	} mode;
 
 }tCCParticle;
@@ -229,11 +220,6 @@ typedef void (*CC_UPDATE_PARTICLE_IMP)(id, SEL, tCCParticle*, CGPoint);
 			// Variance in degrees for rotatePerSecond
 			float rotatePerSecondVar;
 		} B;
-		
-		// Mode C: Chipmunk physics integration
-		struct {
-			cpFloat mass;
-		} C;
 	} mode;
 	
 	// start ize of the particles
@@ -287,9 +273,6 @@ typedef void (*CC_UPDATE_PARTICLE_IMP)(id, SEL, tCCParticle*, CGPoint);
 	CCTexture2D *texture_;
 	// blend function
 	ccBlendFunc	blendFunc_;
-	
-	// Chipmunk physics space
-	cpSpace *space;
 
 	// movment type: free or grouped
 	tCCPositionType	positionType_;
@@ -385,8 +368,6 @@ typedef void (*CC_UPDATE_PARTICLE_IMP)(id, SEL, tCCParticle*, CGPoint);
 @property (nonatomic,readwrite,assign) float emissionRate;
 /** maximum particles of the system */
 @property (nonatomic,readwrite,assign) int totalParticles;
-/** MUST set the physics space for the particles to live in */
-@property (nonatomic, readwrite, assign) cpSpace *space;
 /** conforms to CocosNodeTexture protocol */
 @property (nonatomic,readwrite, retain) CCTexture2D * texture;
 /** conforms to CocosNodeTexture protocol */
@@ -428,19 +409,13 @@ typedef void (*CC_UPDATE_PARTICLE_IMP)(id, SEL, tCCParticle*, CGPoint);
  */
 -(id) initWithFile:(NSString*) plistFile;
 
-/** Initializes from a plist file and sets the cpSpace for Chipmunk integration
- */
--(id) initWithFile:(NSString *)plistFile chipmunkSpace:(cpSpace *)aSpace;
-
 /** initializes a CCQuadParticleSystem from a NSDictionary.
  @since v0.99.3
  */
 -(id) initWithDictionary:(NSDictionary*)dictionary;
--(id) initWithDictionary:(NSDictionary *)dictionary chipmunkSpace:(cpSpace *)aSpace;
 
 //! Initializes a system with a fixed number of particles
 -(id) initWithTotalParticles:(int) numberOfParticles;
--(id) initWithTotalParticles:(int)numberOfParticles chipmunkSpace:(cpSpace *)aSpace;
 //! Add a particle to the emitter
 -(BOOL) addParticle;
 //! Initializes a particle

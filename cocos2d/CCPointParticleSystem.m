@@ -61,6 +61,28 @@
 	return self;
 }
 
+-(id) initWithTotalParticles:(int)numberOfParticles chipmunkSpace:(cpSpace *)aSpace {
+	if( (self=[super initWithTotalParticles:numberOfParticles chipmunkSpace:aSpace]) ) {
+		
+		vertices = malloc( sizeof(ccPointSprite) * totalParticles );
+		
+		if( ! vertices ) {
+			NSLog(@"cocos2d: Particle system: not enough memory");
+			[self release];
+			return nil;
+		}
+		
+		glGenBuffers(1, &verticesID);
+		
+		// initial binding
+		glBindBuffer(GL_ARRAY_BUFFER, verticesID);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(ccPointSprite)*totalParticles, vertices,GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);		
+	}
+	
+	return self;
+}
+
 -(void) dealloc
 {
 	free(vertices);

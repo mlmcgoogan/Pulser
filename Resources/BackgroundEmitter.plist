@@ -3,93 +3,95 @@
 <plist version="1.0">
 <dict>
 	<key>angle</key>
-	<real>293.42001342773438</real>
+	<real>293.4200134277344</real>
 	<key>angleVariance</key>
-	<real>150.41000366210938</real>
+	<real>150.4100036621094</real>
 	<key>blendFuncDestination</key>
-	<integer>771</integer>
-	<key>blendFuncSource</key>
 	<integer>1</integer>
+	<key>blendFuncSource</key>
+	<integer>770</integer>
 	<key>duration</key>
 	<real>-1</real>
 	<key>emitterType</key>
-	<real>0.0</real>
+	<real>2</real>
+	<key>mass</key>
+	<integer>5</integer>
 	<key>finishColorAlpha</key>
 	<real>1</real>
 	<key>finishColorBlue</key>
-	<real>0.25999999046325684</real>
+	<real>1</real>
 	<key>finishColorGreen</key>
 	<real>1</real>
 	<key>finishColorRed</key>
 	<real>1</real>
 	<key>finishColorVarianceAlpha</key>
-	<real>0.0</real>
+	<real>0</real>
 	<key>finishColorVarianceBlue</key>
-	<real>0.62000000476837158</real>
+	<real>0</real>
 	<key>finishColorVarianceGreen</key>
-	<real>0.69999998807907104</real>
+	<real>0.01999999955296516</real>
 	<key>finishColorVarianceRed</key>
-	<real>0.62000000476837158</real>
+	<real>0.300000011920929</real>
 	<key>finishParticleSize</key>
 	<real>3</real>
 	<key>finishParticleSizeVariance</key>
-	<real>1.6986303329467773</real>
+	<real>1.698630332946777</real>
 	<key>gravityx</key>
-	<real>0.0</real>
+	<real>0</real>
 	<key>gravityy</key>
-	<real>0.0</real>
+	<real>0</real>
 	<key>maxParticles</key>
 	<real>355</real>
 	<key>maxRadius</key>
 	<real>100</real>
 	<key>maxRadiusVariance</key>
-	<real>0.0</real>
+	<real>0</real>
 	<key>minRadius</key>
-	<real>0.0</real>
+	<real>0</real>
 	<key>particleLifespan</key>
 	<real>10</real>
 	<key>particleLifespanVariance</key>
-	<real>0.090000003576278687</real>
+	<real>0.09000000357627869</real>
 	<key>radialAccelVariance</key>
-	<real>0.0</real>
+	<real>0</real>
 	<key>radialAcceleration</key>
-	<real>0.15789508819580078</real>
+	<real>0.1578950881958008</real>
 	<key>rotatePerSecond</key>
-	<real>0.0</real>
+	<real>0</real>
 	<key>rotatePerSecondVariance</key>
-	<real>0.0</real>
+	<real>0</real>
 	<key>sourcePositionVariancex</key>
 	<real>521</real>
 	<key>sourcePositionVariancey</key>
-	<real>478.32000732421875</real>
+	<real>478.3200073242188</real>
 	<key>sourcePositionx</key>
 	<real>512</real>
 	<key>sourcePositiony</key>
 	<real>384</real>
 	<key>speed</key>
-	<real>29.210525512695312</real>
+	<real>29.21052551269531</real>
 	<key>speedVariance</key>
-	<real>0.0</real>
+	<real>0</real>
 	<key>startColorAlpha</key>
 	<real>1</real>
 	<key>startColorBlue</key>
-	<real>0.74000000953674316</real>
+	<real>0.4199999868869781</real>
 	<key>startColorGreen</key>
-	<real>0.6600000262260437</real>
+	<real>0.1800000071525574</real>
 	<key>startColorRed</key>
-	<real>0.6600000262260437</real>
+	<real>0.05999999865889549</real>
 	<key>startColorVarianceAlpha</key>
-	<real>0.0</real>
+	<real>0</real>
 	<key>startColorVarianceBlue</key>
-	<real>0.6600000262260437</real>
+	<real>0.1800000071525574</real>
 	<key>startColorVarianceGreen</key>
-	<real>0.74000000953674316</real>
+	<real>0.2199999988079071</real>
 	<key>startColorVarianceRed</key>
-	<real>0.6600000262260437</real>
+	<real>0.1400000005960464</real>
 	<key>startParticleSize</key>
 	<real>3</real>
 	<key>startParticleSizeVariance</key>
-	<real>3</real>
+	<real>2.947368383407593</real>
 	<key>tangentialAccelVariance</key>
 	<real>46</real>
 	<key>tangentialAcceleration</key>
@@ -97,6 +99,6 @@
 	<key>textureFileName</key>
 	<string>BackgroundEmitter.png</string>
 	<key>textureImageData</key>
-	<string>H4sIAAAAAAAAAwFmA5n8iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADLUlEQVRYCcXX51JbQRCEUeOc/f6v6ZzxHKFPLAoI84epmrp7985294QVxcXl5eWjh7Sn9yB/MWcej19sXQb87/iP8f+yiztWAOmzcYL5k/F9AX9m7/fWf83zTmLOVeD5AHECWieiKpR95D8nlhPcepbH7TYBL+dI/mrWRCRkrQIBZY9Q5vzb+PdxQj2P2ikBCPnrxb0TRMQpAYiRIa9lVcregR0TgATZm/G3W7cmxn5VaA6qQNkjEkNAMbPcDOpBJfYF6DMByJC/H3+3XSfC97IziATov8FD8HUcDmzZs+bETSF0Z+cEICeCE0TYOQFlHznSZoTQkwIc5PW+FqwC7NUGVagCXTvlXzNHXnXE5LsrulYAYFduX4Ts11b4LlaWlbXBWzNH2GxojzN4jgogJgENYreganyYGELsq1YCAOp9CZX5eivEwy9mltcvPvqwirBHSGKIQE6Eitg35forO5mxSo5cDJyVHIf3TRVSIxNgiUgIUO5Abel2qII4hLJnSk5M7XC2rMPGU5s2APO++11PiKBVUECEyAq5athHyvS6TO2vhOHB72/ILK+VtHnb0+EEAkeiLZGV2UpyG94cvRbgh+KcGyzenZb5l3FPbbBfzDks3zcmE9aBCIBF1FCt16meO98M6L3BEpeohIUHP65ZXvXJM2IH8oCAATZYiJWc+a7swJF/HvddnHjnuLgwE4RvY1XAAVMuwAHvHPA61cUDNnD6DUws8k/j2kJEZ8NahdjbWIBeVvJIgSISh4yJ8931SgBwpMhVwtPZKiIeaSJmeWWrgMolENh6pSKXrTjftcKU66m9ziViFSI+AWJ3tgoQADTwrtdKLvvinE2AfcAylTXyj9tn1UiE8ztbBdhUIiD2u9ez3PS5LP0QJe6UgKpgJhpOuPBv2DEBMubAmbI3H0BqDYEJcBOAy06mqpCI/xIw5zYViFx/gZc98IZyX0DtITIR+4M4n27afgX6CgB52dffsq9FawWqkipUCWLyWR7aKQEiHVwFuHbrX7batApNRO3wPOj77O3swf8zuquAneJZaEPZ14KqcOOKrYdOre8j4BTWvfZl8qD2D7ghcomuE8XXAAAAAElFTkSuQmCCksg8PmYDAAA=</string>
+	<string>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</string>
 </dict>
 </plist>

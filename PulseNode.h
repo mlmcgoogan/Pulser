@@ -27,6 +27,7 @@
 	cpSpace *_space;
 	CGPoint currentDestination;
 	cpBody *pathBody;
+	cpConstraint *joint;
 }
 
 @property (nonatomic, retain) CCQuadParticleSystem *particleSystem;
@@ -39,5 +40,8 @@
 - (CGPoint)randomPoint;
 
 - (void)removeMeteor:(MeteorNode *)meteor;
+
+// Removing PulseNode
+- (void)prepForRemoval;
 
 @end

@@ -52,7 +52,6 @@
 #import "CCParticleSystem.h"
 #import "CCTextureCache.h"
 #import "ccMacros.h"
-#import "cocos2d.h"
 
 // support
 #import "Support/OpenGL_Internal.h"
@@ -77,7 +76,6 @@
 @synthesize positionType = positionType_;
 @synthesize autoRemoveOnFinish = autoRemoveOnFinish_;
 @synthesize emitterMode = emitterMode_;
-@synthesize space;
 
 
 +(id) particleWithFile:(NSString*) plistFile
@@ -98,13 +96,6 @@
 	NSString *path = [CCFileUtils fullPathFromRelativePath:plistFile];
 	NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:path];
 	return [self initWithDictionary:dict];
-}
-
--(id) initWithFile:(NSString *)plistFile chipmunkSpace:(cpSpace *)aSpace
-{
-	NSString *path = [CCFileUtils fullPathFromRelativePath:plistFile];
-	NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:path];
-	return [self initWithDictionary:dict chipmunkSpace:aSpace];
 }
 
 -(id) initWithDictionary:(NSDictionary *)dictionary
@@ -196,9 +187,6 @@
 			mode.B.rotatePerSecond = [[dictionary valueForKey:@"rotatePerSecond"] floatValue];
 			mode.B.rotatePerSecondVar = [[dictionary valueForKey:@"rotatePerSecondVariance"] floatValue];
 
-		} 
-		else if( emitterMode_ == kCCParticleModePhysics ) {
-			mode.C.mass = [[dictionary valueForKey:@"mass"] floatValue];
 		} else {
 			NSAssert( NO, @"Invalid emitterType in config file");
 		}
@@ -228,141 +216,6 @@
 			int deflatedLen = inflateMemory(buffer, len, &deflated);
 			free( buffer );
 				
-			NSAssert( deflated != NULL, @"CCParticleSystem: error ungzipping textureImageData");
-			NSData *data = [[NSData alloc] initWithBytes:deflated length:deflatedLen];
-			UIImage *image = [[UIImage alloc] initWithData:data];
-			self.texture = [[CCTextureCache sharedTextureCache] addCGImage:[image CGImage] forKey:textureName];
-			[data release];
-			[image release];
-		}
-		
-		NSAssert( [self texture] != NULL, @"CCParticleSystem: error loading the texture");
-		
-	}
-	
-	return self;
-}
-
--(id) initWithDictionary:(NSDictionary *)dictionary chipmunkSpace:(cpSpace *)aSpace {
-	int maxParticles = [[dictionary valueForKey:@"maxParticles"] intValue];
-	// self, not super
-	if ((self=[self initWithTotalParticles:maxParticles chipmunkSpace:aSpace] ) ) {
-		
-		// angle
-		angle = [[dictionary valueForKey:@"angle"] floatValue];
-		angleVar = [[dictionary valueForKey:@"angleVariance"] floatValue];
-		
-		// duration
-		duration = [[dictionary valueForKey:@"duration"] floatValue];
-		
-		// blend function 
-		blendFunc_.src = [[dictionary valueForKey:@"blendFuncSource"] intValue];
-		blendFunc_.dst = [[dictionary valueForKey:@"blendFuncDestination"] intValue];
-		
-		// color
-		float r,g,b,a;
-		
-		r = [[dictionary valueForKey:@"startColorRed"] floatValue];
-		g = [[dictionary valueForKey:@"startColorGreen"] floatValue];
-		b = [[dictionary valueForKey:@"startColorBlue"] floatValue];
-		a = [[dictionary valueForKey:@"startColorAlpha"] floatValue];
-		startColor = (ccColor4F) {r,g,b,a};
-		
-		r = [[dictionary valueForKey:@"startColorVarianceRed"] floatValue];
-		g = [[dictionary valueForKey:@"startColorVarianceGreen"] floatValue];
-		b = [[dictionary valueForKey:@"startColorVarianceBlue"] floatValue];
-		a = [[dictionary valueForKey:@"startColorVarianceAlpha"] floatValue];
-		startColorVar = (ccColor4F) {r,g,b,a};
-		
-		r = [[dictionary valueForKey:@"finishColorRed"] floatValue];
-		g = [[dictionary valueForKey:@"finishColorGreen"] floatValue];
-		b = [[dictionary valueForKey:@"finishColorBlue"] floatValue];
-		a = [[dictionary valueForKey:@"finishColorAlpha"] floatValue];
-		endColor = (ccColor4F) {r,g,b,a};
-		
-		r = [[dictionary valueForKey:@"finishColorVarianceRed"] floatValue];
-		g = [[dictionary valueForKey:@"finishColorVarianceGreen"] floatValue];
-		b = [[dictionary valueForKey:@"finishColorVarianceBlue"] floatValue];
-		a = [[dictionary valueForKey:@"finishColorVarianceAlpha"] floatValue];
-		endColorVar = (ccColor4F) {r,g,b,a};
-		
-		// particle size
-		startSize = [[dictionary valueForKey:@"startParticleSize"] floatValue];
-		startSizeVar = [[dictionary valueForKey:@"startParticleSizeVariance"] floatValue];
-		endSize = [[dictionary valueForKey:@"finishParticleSize"] floatValue];
-		endSizeVar = [[dictionary valueForKey:@"finishParticleSizeVariance"] floatValue];
-		
-		
-		// position
-		float x = [[dictionary valueForKey:@"sourcePositionx"] floatValue];
-		float y = [[dictionary valueForKey:@"sourcePositiony"] floatValue];
-		position_ = ccp(x,y);
-		posVar.x = [[dictionary valueForKey:@"sourcePositionVariancex"] floatValue];
-		posVar.y = [[dictionary valueForKey:@"sourcePositionVariancey"] floatValue];
-		
-		
-		emitterMode_ = [[dictionary valueForKey:@"emitterType"] intValue];
-		
-		if( emitterMode_ == kCCParticleModeGravity ) {
-			// Mode A: Gravity + tangential accel + radial accel
-			// gravity
-			mode.A.gravity.x = [[dictionary valueForKey:@"gravityx"] floatValue];
-			mode.A.gravity.y = [[dictionary valueForKey:@"gravityy"] floatValue];
-			
-			//
-			// speed
-			mode.A.speed = [[dictionary valueForKey:@"speed"] floatValue];
-			mode.A.speedVar = [[dictionary valueForKey:@"speedVariance"] floatValue];
-			
-			// radial & tangential accel should be supported as well by Particle Designer
-		}
-		
-		
-		// or Mode B: radius movement
-		else if( emitterMode_ == kCCParticleModeRadius ) {
-			float maxRadius = [[dictionary valueForKey:@"maxRadius"] floatValue];
-			float maxRadiusVar = [[dictionary valueForKey:@"maxRadiusVariance"] floatValue];
-			float minRadius = [[dictionary valueForKey:@"minRadius"] floatValue];
-			
-			mode.B.startRadius = maxRadius;
-			mode.B.startRadiusVar = maxRadiusVar;
-			mode.B.endRadius = minRadius;
-			mode.B.endRadiusVar = 0;
-			mode.B.rotatePerSecond = [[dictionary valueForKey:@"rotatePerSecond"] floatValue];
-			mode.B.rotatePerSecondVar = [[dictionary valueForKey:@"rotatePerSecondVariance"] floatValue];
-			
-		} 
-		else if( emitterMode_ == kCCParticleModePhysics ) {
-			mode.C.mass = [[dictionary valueForKey:@"mass"] floatValue];
-		} else {
-			NSAssert( NO, @"Invalid emitterType in config file");
-		}
-		
-		// life span
-		life = [[dictionary valueForKey:@"particleLifespan"] floatValue];
-		lifeVar = [[dictionary valueForKey:@"particleLifespanVariance"] floatValue];				
-		
-		// emission Rate
-		emissionRate = totalParticles/life;
-		
-		// texture		
-		// Try to get the texture from the cache
-		NSString *textureName = [dictionary valueForKey:@"textureFileName"];
-		NSString *textureData = [dictionary valueForKey:@"textureImageData"];
-		
-		self.texture = [[CCTextureCache sharedTextureCache] addImage:textureName];
-		
-		if ( ! texture_ && textureData) {
-
-			// if it fails, try to get it from the base64-gzipped data			
-			unsigned char *buffer = NULL;
-			int len = base64Decode((unsigned char*)[textureData UTF8String], [textureData length], &buffer);
-			NSAssert( buffer != NULL, @"CCParticleSystem: error decoding textureImageData");
-			
-			unsigned char *deflated = NULL;
-			int deflatedLen = inflateMemory(buffer, len, &deflated);
-			free( buffer );
-			
 			NSAssert( deflated != NULL, @"CCParticleSystem: error ungzipping textureImageData");
 			NSData *data = [[NSData alloc] initWithBytes:deflated length:deflatedLen];
 			UIImage *image = [[UIImage alloc] initWithData:data];
@@ -427,65 +280,6 @@
 	return self;
 }
 
--(id) initWithTotalParticles:(int)numberOfParticles chipmunkSpace:(cpSpace *)aSpace {
-	if( (self=[super init]) ) {
-		
-		space = aSpace;
-		
-		totalParticles = numberOfParticles;
-		
-		CGSize wins = [[CCDirector sharedDirector] winSize];
-		centerOfGravity = ccp(wins.width/2, wins.height/2);
-		posVar = ccp(wins.width/2,wins.height/2);
-		
-		particles = calloc( totalParticles, sizeof(tCCParticle) );
-		
-		if( ! particles ) {
-			NSLog(@"Particle system: not enough memory");
-			[self release];
-			return nil;
-		}
-		
-		// default, active
-		active = YES;
-		
-		// default blend function
-		blendFunc_ = (ccBlendFunc) { CC_BLEND_SRC, CC_BLEND_DST };
-		
-		// default movement type;
-		positionType_ = kCCPositionTypeGrouped;
-		
-		emitterMode_ = kCCParticleModePhysics;
-		
-		// default: modulate
-		// XXX: not used
-		//	colorModulate = YES;
-		
-		autoRemoveOnFinish_ = NO;
-		
-		self.texture = [[CCTextureCache sharedTextureCache] addImage:@"fire.png"];
-		
-		// profiling
-#if CC_ENABLE_PROFILERS
-		_profilingTimer = [[CCProfiler timerWithName:@"particle system" andInstance:self] retain];
-#endif
-		
-		// Optimization: compile udpateParticle method
-		updateParticleSel = @selector(updateQuadWithParticle:newPosition:);
-		updateParticleImp = (CC_UPDATE_PARTICLE_IMP) [self methodForSelector:updateParticleSel];
-		
-		// DO NOT use -update with chipmunk
-		// udpate after action in run!
-		//[self scheduleUpdateWithPriority:1];
-		
-		while (particleCount < totalParticles)
-			[self addParticle];
-		
-	}
-	
-	return self;
-}
-
 -(void) dealloc
 {
 	free( particles );
@@ -514,6 +308,7 @@
 
 -(void) initParticle: (tCCParticle*) particle
 {
+
 	// timeToLive
 	// no negative life. prevent division by 0
 	particle->timeToLive = MAX(0, life + lifeVar * CCRANDOM_MINUS1_1() );
@@ -586,7 +381,7 @@
 	}
 	
 	// Mode Radius: B
-	else if( emitterMode_ == kCCParticleModeRadius ) {
+	else {
 		// Set the default diameter of the particle from the source position
 		float startRadius = mode.B.startRadius + mode.B.startRadiusVar * CCRANDOM_MINUS1_1();
 		float endRadius = mode.B.endRadius + mode.B.endRadiusVar * CCRANDOM_MINUS1_1();
@@ -601,26 +396,7 @@
 		particle->mode.B.angle = a;
 		particle->mode.B.degreesPerSecond = CC_DEGREES_TO_RADIANS(mode.B.rotatePerSecond + mode.B.rotatePerSecondVar * CCRANDOM_MINUS1_1());
 		
-	}
-	
-	// Mode Physics: C
-	else {
-		cpBody *particleBody = cpBodyNew(mode.C.mass, INFINITY);
-		particleBody->p = particle->pos;
-		cpSpaceAddBody(space, particleBody);
-		
-		particle->mode.C.shape = cpCircleShapeNew(particleBody, 2.0, cpvzero);
-		cpShape *sh = particle->mode.C.shape;
-		sh->data = &particle;
-		sh->collision_type = 8;
-		sh->u = 0.2;
-		sh->e = 0.6;
-		cpSpaceAddShape(space, sh);
-	}
-	
-	if (emitterMode_ == kCCParticleModePhysics)
-		NSLog(@"Init %d (%f,%f)", particleCount, particle->pos.x, particle->pos.y);
-
+	}	
 }
 
 -(void) stopSystem
@@ -708,18 +484,13 @@
 			}
 			
 			// Mode B: radius movement
-			else if( emitterMode_ == kCCParticleModeRadius ) {				
+			else {				
 				// Update the angle and radius of the particle.
 				p->mode.B.angle += p->mode.B.degreesPerSecond * dt;
 				p->mode.B.radius += p->mode.B.deltaRadius * dt;
 				
 				p->pos.x = - cosf(p->mode.B.angle) * p->mode.B.radius;
 				p->pos.y = - sinf(p->mode.B.angle) * p->mode.B.radius;
-			}
-			
-			// Mode C: physics
-			else {
-				p->pos = p->mode.C.shape->body->p;
 			}
 			
 			// color
@@ -741,7 +512,7 @@
 			
 			CGPoint	newPos;
 			
-			if( positionType_ == kCCPositionTypeFree && emitterMode_ != kCCParticleModePhysics ) {
+			if( positionType_ == kCCPositionTypeFree ) {
 				CGPoint diff = ccpSub( currentPosition, p->startPos );
 				newPos = ccpSub(p->pos, diff);
 				

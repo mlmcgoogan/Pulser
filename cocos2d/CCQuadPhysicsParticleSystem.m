@@ -29,7 +29,7 @@
 #import <OpenGLES/ES1/gl.h>
 
 // cocos2d
-#import "CCQuadParticleSystem.h"
+#import "CCQuadPhysicsParticleSystem.h"
 #import "CCTextureCache.h"
 #import "ccMacros.h"
 
@@ -37,54 +37,21 @@
 #import "Support/OpenGL_Internal.h"
 #import "Support/CGPointExtension.h"
 
-@implementation CCQuadParticleSystem
+@implementation CCQuadPhysicsParticleSystem
 
-
-// overriding the init method
--(id) initWithTotalParticles:(int) numberOfParticles
-{
-	// base initialization
-	if( (self=[super initWithTotalParticles:numberOfParticles]) ) {
-	
-		// allocating data space
-		quads = malloc( sizeof(quads[0]) * totalParticles );
-		indices = malloc( sizeof(indices[0]) * totalParticles * 6 );
-		
-		if( !quads || !indices) {
-			NSLog(@"cocos2d: Particle system: not enough memory");
-			if( quads )
-				free( quads );
-			if(indices)
-				free(indices);
-			
-			[self release];
-			return nil;
-		}
-		
-		// initialize only once the texCoords and the indices
-		[self initTexCoords];
-		[self initIndices];
-
-		// create the VBO buffer
-		glGenBuffers(1, &quadsID);
-		
-		// initial binding
-		glBindBuffer(GL_ARRAY_BUFFER, quadsID);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(quads[0])*totalParticles, quads,GL_DYNAMIC_DRAW);	
-		glBindBuffer(GL_ARRAY_BUFFER, 0);		
-	}
-		
-	return self;
-}
+@synthesize texture;
 
 -(id) initWithTotalParticles:(int) numberOfParticles chipmunkSpace:(cpSpace *)aSpace
 {
 	// base initialization
-	if( (self=[super initWithTotalParticles:numberOfParticles chipmunkSpace:aSpace]) ) {
+	if( (self=[super init]) ) {
+		
+		totalParticleCount = numberOfParticles;
 		
 		// allocating data space
-		quads = malloc( sizeof(quads[0]) * totalParticles );
-		indices = malloc( sizeof(indices[0]) * totalParticles * 6 );
+		quads = malloc( sizeof(quads[0]) * numberOfParticles );
+		indices = malloc( sizeof(indices[0]) * numberOfParticles * 6 );
+		particles = malloc( sizeof(ccQuadPhysicsParticle) * numberOfParticles );
 		
 		if( !quads || !indices) {
 			NSLog(@"cocos2d: Particle system: not enough memory");
@@ -97,7 +64,12 @@
 			return nil;
 		}
 		
+		self.texture = [[CCTextureCache sharedTextureCache] addImage:@"fire.png"];
+		blendFunc.src = CC_BLEND_SRC;
+		blendFunc.dst = CC_BLEND_DST;
+		
 		// initialize only once the texCoords and the indices
+		[self initParticles];
 		[self initTexCoords];
 		[self initIndices];
 		
@@ -106,7 +78,7 @@
 		
 		// initial binding
 		glBindBuffer(GL_ARRAY_BUFFER, quadsID);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(quads[0])*totalParticles, quads,GL_DYNAMIC_DRAW);	
+		glBufferData(GL_ARRAY_BUFFER, sizeof(quads[0])*numberOfParticles, quads,GL_DYNAMIC_DRAW);	
 		glBindBuffer(GL_ARRAY_BUFFER, 0);		
 	}
 	
@@ -117,17 +89,32 @@
 {
 	free(quads);
 	free(indices);
+	free(particles);
 	glDeleteBuffers(1, &quadsID);
 	
 	[super dealloc];
 }
 
+- (void)initParticles {
+	for (int i=0 ; i<totalParticleCount ; i++) {
+		ccQuadPhysicsParticle *particle = &particles[i];
+		
+		particle->position = ccp(1024.0 * CCRANDOM_0_1(), 768.0 * CCRANDOM_0_1());
+		particle->color.r = 0.0;
+		particle->color.g = 60.0 * CCRANDOM_0_1() / 255.0;
+		particle->color.b = 255.0 * CCRANDOM_0_1() / 255.0;
+		particle->color.a = 1.0;
+		particle->rotation = 0.0;
+		particle->size = 2.0;
+	}
+}
+
 -(void) initTexCoords
 {
-	float maxS = [texture_ maxS];
-	float maxT = [texture_ maxT];
-
-	for(int i=0; i<totalParticles; i++) {
+	float maxS = [texture maxS];
+	float maxT = [texture maxT];
+	
+	for(int i=0; i<totalParticleCount; i++) {
 		// bottom-left vertex:
 		quads[i].bl.texCoords.u = 0;
 		quads[i].bl.texCoords.v = 0;
@@ -143,15 +130,16 @@
 	}
 }
 
--(void) setTexture:(CCTexture2D *)texture
+-(void) setTexture:(CCTexture2D *)_texture
 {
-	[super setTexture:texture];
+	[texture release];
+	texture = [_texture retain];
 	[self initTexCoords];
 }
 
 -(void) initIndices
 {
-	for( int i=0;i< totalParticles;i++) {
+	for( int i=0;i< totalParticleCount;i++) {
 		indices[i*6+0] = i*4+0;
 		indices[i*6+1] = i*4+1;
 		indices[i*6+2] = i*4+2;
@@ -162,75 +150,82 @@
 	}
 }
 
--(void) updateQuadWithParticle:(tCCParticle*)p newPosition:(CGPoint)newPos
-{
-	// colors
-	quads[particleIdx].bl.colors = p->color;
-	quads[particleIdx].br.colors = p->color;
-	quads[particleIdx].tl.colors = p->color;
-	quads[particleIdx].tr.colors = p->color;
-	
-	// vertices
-	float size_2 = p->size/2;
-	if( p->rotation ) {
-		float x1 = -size_2;
-		float y1 = -size_2;
+- (void)updateQuad {
+	for (int i=0 ; i<totalParticleCount ; i++) {
+		ccQuadPhysicsParticle *p = &particles[i];
 		
-		float x2 = size_2;
-		float y2 = size_2;
-		float x = newPos.x;
-		float y = newPos.y;
+		// colors
+		quads[i].bl.colors = p->color;
+		quads[i].br.colors = p->color;
+		quads[i].tl.colors = p->color;
+		quads[i].tr.colors = p->color;
 		
-		float r = (float)-CC_DEGREES_TO_RADIANS(p->rotation);
-		float cr = cosf(r);
-		float sr = sinf(r);
-		float ax = x1 * cr - y1 * sr + x;
-		float ay = x1 * sr + y1 * cr + y;
-		float bx = x2 * cr - y1 * sr + x;
-		float by = x2 * sr + y1 * cr + y;
-		float cx = x2 * cr - y2 * sr + x;
-		float cy = x2 * sr + y2 * cr + y;
-		float dx = x1 * cr - y2 * sr + x;
-		float dy = x1 * sr + y2 * cr + y;
+		CGPoint newPos = p->position;
 		
-		// bottom-left
-		quads[particleIdx].bl.vertices.x = ax;
-		quads[particleIdx].bl.vertices.y = ay;
-		
-		// bottom-right vertex:
-		quads[particleIdx].br.vertices.x = bx;
-		quads[particleIdx].br.vertices.y = by;
-		
-		// top-left vertex:
-		quads[particleIdx].tl.vertices.x = dx;
-		quads[particleIdx].tl.vertices.y = dy;
-		
-		// top-right vertex:
-		quads[particleIdx].tr.vertices.x = cx;
-		quads[particleIdx].tr.vertices.y = cy;
-	} else {
-		// bottom-left vertex:
-		quads[particleIdx].bl.vertices.x = newPos.x - size_2;
-		quads[particleIdx].bl.vertices.y = newPos.y - size_2;
-		
-		// bottom-right vertex:
-		quads[particleIdx].br.vertices.x = newPos.x + size_2;
-		quads[particleIdx].br.vertices.y = newPos.y - size_2;
-		
-		// top-left vertex:
-		quads[particleIdx].tl.vertices.x = newPos.x - size_2;
-		quads[particleIdx].tl.vertices.y = newPos.y + size_2;
-		
-		// top-right vertex:
-		quads[particleIdx].tr.vertices.x = newPos.x + size_2;
-		quads[particleIdx].tr.vertices.y = newPos.y + size_2;				
+		// vertices
+		float size_2 = p->size/2;
+		if( p->rotation ) {
+			float x1 = -size_2;
+			float y1 = -size_2;
+			
+			float x2 = size_2;
+			float y2 = size_2;
+			float x = newPos.x;
+			float y = newPos.y;
+			
+			float r = (float)-CC_DEGREES_TO_RADIANS(p->rotation);
+			float cr = cosf(r);
+			float sr = sinf(r);
+			float ax = x1 * cr - y1 * sr + x;
+			float ay = x1 * sr + y1 * cr + y;
+			float bx = x2 * cr - y1 * sr + x;
+			float by = x2 * sr + y1 * cr + y;
+			float cx = x2 * cr - y2 * sr + x;
+			float cy = x2 * sr + y2 * cr + y;
+			float dx = x1 * cr - y2 * sr + x;
+			float dy = x1 * sr + y2 * cr + y;
+			
+			// bottom-left
+			quads[i].bl.vertices.x = ax;
+			quads[i].bl.vertices.y = ay;
+			
+			// bottom-right vertex:
+			quads[i].br.vertices.x = bx;
+			quads[i].br.vertices.y = by;
+			
+			// top-left vertex:
+			quads[i].tl.vertices.x = dx;
+			quads[i].tl.vertices.y = dy;
+			
+			// top-right vertex:
+			quads[i].tr.vertices.x = cx;
+			quads[i].tr.vertices.y = cy;
+		} else {
+			// bottom-left vertex:
+			quads[i].bl.vertices.x = newPos.x - size_2;
+			quads[i].bl.vertices.y = newPos.y - size_2;
+			
+			// bottom-right vertex:
+			quads[i].br.vertices.x = newPos.x + size_2;
+			quads[i].br.vertices.y = newPos.y - size_2;
+			
+			// top-left vertex:
+			quads[i].tl.vertices.x = newPos.x - size_2;
+			quads[i].tl.vertices.y = newPos.y + size_2;
+			
+			// top-right vertex:
+			quads[i].tr.vertices.x = newPos.x + size_2;
+			quads[i].tr.vertices.y = newPos.y + size_2;				
+		}
 	}
+	
+	[self postStep];
 }
 
 -(void) postStep
 {
 	glBindBuffer(GL_ARRAY_BUFFER, quadsID);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(quads[0])*particleCount, quads);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(quads[0])*totalParticleCount, quads);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -242,22 +237,22 @@
 	// Unneeded states: -
 	
 	
-	glBindTexture(GL_TEXTURE_2D, texture_.name);
-
+	glBindTexture(GL_TEXTURE_2D, texture.name);
+	
 	glBindBuffer(GL_ARRAY_BUFFER, quadsID);
-
+	
 #define kPointSize sizeof(quads[0].bl)
 	glVertexPointer(2,GL_FLOAT, kPointSize, 0);
-
+	
 	glColorPointer(4, GL_FLOAT, kPointSize, (GLvoid*) offsetof(ccV2F_C4F_T2F,colors) );
 	
 	glTexCoordPointer(2, GL_FLOAT, kPointSize, (GLvoid*) offsetof(ccV2F_C4F_T2F,texCoords) );
 	
 	
 	BOOL newBlend = NO;
-	if( blendFunc_.src != CC_BLEND_SRC || blendFunc_.dst != CC_BLEND_DST ) {
+	if( blendFunc.src != CC_BLEND_SRC || blendFunc.dst != CC_BLEND_DST ) {
 		newBlend = YES;
-		glBlendFunc( blendFunc_.src, blendFunc_.dst );
+		glBlendFunc( blendFunc.src, blendFunc.dst );
 	}
 	
 	// save color mode
@@ -268,11 +263,8 @@
 	else
 		glTexEnvi( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE );
 #endif
-
-	if( particleIdx != particleCount ) {
-		NSLog(@"pd:%d, pc:%d", particleIdx, particleCount);
-	}
-	glDrawElements(GL_TRIANGLES, particleIdx*6, GL_UNSIGNED_SHORT, indices);	
+	
+	glDrawElements(GL_TRIANGLES, totalParticleCount*6, GL_UNSIGNED_SHORT, indices);	
 	
 	// restore blend state
 	if( newBlend )
@@ -284,7 +276,7 @@
 #endif
 	
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+	
 	// restore GL default state
 	// -
 }

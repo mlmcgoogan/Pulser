@@ -25,33 +25,56 @@
  */
 
 
-#import "CCParticleSystem.h"
+#import "CCNode.h"
+#import "chipmunk.h"
+
+typedef struct _ccQuadPhysicsParticle {
+	ccVertex2F	position;
+	ccColor4F	color;
+	float		rotation;
+	float		size;
+} ccQuadPhysicsParticle;
 
 /** CCQuadParticleSystem is a subclass of CCParticleSystem
-
+ 
  It includes all the features of ParticleSystem.
  
  Special features and Limitations:
-  - Particle size can be any float number.
-  - The system can be scaled
-  - The particles can be rotated
-  - It is a bit slower that PointParticleSystem
-  - It consumes more RAM and more GPU memory than PointParticleSystem
+ - Particle size can be any float number.
+ - The system can be scaled
+ - The particles can be rotated
+ - It is a bit slower that PointParticleSystem
+ - It consumes more RAM and more GPU memory than PointParticleSystem
  @since v0.8
  */
-@interface CCQuadParticleSystem : CCParticleSystem
+@interface CCQuadPhysicsParticleSystem : CCNode
 {
+	ccQuadPhysicsParticle *particles;// particle information
 	ccV2F_C4F_T2F_Quad	*quads;		// quads to be rendered
 	GLushort			*indices;	// indices
 	GLuint				quadsID;	// VBO id
+	
+	CCTexture2D *texture;
+	ccBlendFunc blendFunc;
+	int totalParticleCount;
 }
+
+@property (nonatomic, readonly,retain) CCTexture2D *texture;
+
+-(void) setTexture:(CCTexture2D *)_texture;
 
 -(id) initWithTotalParticles:(int) numberOfParticles chipmunkSpace:(cpSpace *)aSpace;
 
+// initializes particle position/color/size data
+- (void)initParticles;
 // initialices the indices for the vertices
 -(void) initIndices;
 // initilizes the text coords
 -(void) initTexCoords;
+// updates quad based on particles
+- (void)updateQuad;
+// update OpenGL buffer
+- (void)postStep;
 
 
 @end

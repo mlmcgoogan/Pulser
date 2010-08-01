@@ -70,12 +70,16 @@
 - (void)onEnter {
 	[super onEnter];
 	
+	//[[self.pulseNode.controller.bgLayer particleSystem] addEnemy:particleSystem];
+	
 	cpBody *body = shape->body;
 	CGPoint delta = ccpMult(unitVector, 1800.0);
 	cpBodyApplyImpulse(body, delta, cpvzero);
 }
 
 - (void)onExit {
+	
+	//[[self.pulseNode.controller.bgLayer particleSystem] removeEnemy:particleSystem];
 	[super onExit];
 }
 

@@ -15,10 +15,12 @@
 #pragma mark -
 #pragma mark Chipmunk
 
+static cpFloat dampingValue = 1.0;
+
 static void
 dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 {
-	damping = 0.99;
+	damping = dampingValue;
 	cpBodyUpdateVelocity(body, gravity, damping, dt);
 }
 
@@ -52,6 +54,7 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 - (id)initWithSpritePosition:(CGPoint)pos controller:(GameLayer *)gameController space:(cpSpace *)space {
 	if ((self = [self init])) {
 		
+		dampingValue = 0.99;
 		kamikazeSystem = nil;
 		kamikazeModeActive = NO;
 		kamikazeTimer = nil;
@@ -339,8 +342,11 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 #pragma mark Kamikaze Mode
 
 - (void)activateKamikaze {
+	self.isTouchEnabled = NO;
+	
 	kamikazeTimer = nil;
 	
+	dampingValue = 1.0;
 	shape->collision_type = KAMIKAZE_COL_GROUP;
 	
 	kamikazeSystem = [[CCPointParticleSystem alloc] initWithFile:@"Kamikaze.plist"];
@@ -353,6 +359,10 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 }
 
 - (void)deactivateKamikaze {
+	self.isTouchEnabled = YES;
+	
+	dampingValue = 0.99;
+	
 	[controller removeChild:kamikazeSystem cleanup:YES];
 	[kamikazeSystem release];
 	kamikazeSystem = nil;

@@ -14,6 +14,7 @@
 #import "Constants.h"
 #import "SpriteAutoRemoval.h"
 #import "BackgroundLayer.h"
+#import "CCPhysicsParticleSystem.h"
 
 #define SCORELABEL_PADDING 24.0
 
@@ -30,18 +31,34 @@ static void
 eachShape(void *ptr, void* unused)
 {
 	cpShape *shape = (cpShape*) ptr;
-	id node = shape->data;
-	if( node ) {
-		cpBody *body = shape->body;
+	
+	// Particles
+	if (shape->collision_type == PARTICLE_COL_GROUP) {
+		ccPhysicsPointSprite *particle = (ccPhysicsPointSprite *)shape->data;
 		
-		[node setPosition: body->p];
-		[node setRotation: (float) CC_RADIANS_TO_DEGREES( -body->a )];
+		cpVect p = shape->body->p;
 		
-		if (unused != NULL && [node respondsToSelector:@selector(tintNodeBasedOnMeteorProximity:)]) {
-			GameLayer *gLayer = (GameLayer *)unused;
-			NSArray *meteors = [gLayer allMeteors];
+		if (p.x > 1014.0 || p.x < 10.0 || p.y > 758.0 || p.y < 10.0)
+			shape->body->p = cpv(1024.0 * CCRANDOM_0_1(), 768.0 * CCRANDOM_0_1());
+		
+		particle->pos = shape->body->p;
+	}
+	
+	// All other ccnode objects
+	else {
+		id node = shape->data;
+		if( node ) {
+			cpBody *body = shape->body;
 			
-			[node tintNodeBasedOnMeteorProximity:meteors];
+			[node setPosition: body->p];
+			[node setRotation: (float) CC_RADIANS_TO_DEGREES( -body->a )];
+			
+			if (unused != NULL && [node respondsToSelector:@selector(tintNodeBasedOnMeteorProximity:)]) {
+				GameLayer *gLayer = (GameLayer *)unused;
+				NSArray *meteors = [gLayer allMeteors];
+				
+				[node tintNodeBasedOnMeteorProximity:meteors];
+			}
 		}
 	}
 }
@@ -71,6 +88,32 @@ postStepMeteorRemoval(cpSpace *space, cpShape *shape, void *unused)
 	
 	cpSpaceRemoveShape(space, shape);
 	cpShapeFree(shape);
+}
+
+#pragma mark Particle Collisions
+
+static int
+particleTouchCollisionBegin(cpArbiter *arb, cpSpace *space, void *unused)
+{
+	return 0;
+}
+
+static int
+particleParticleCollisionBegin(cpArbiter *arb, cpSpace *space, void *unused)
+{
+	return 0;
+}
+
+static int
+particleMeteorCollisionBegin(cpArbiter *arb, cpSpace *space, void *unused)
+{
+	return 0;
+}
+
+static int
+particlePulseCollisionBegin(cpArbiter *arb, cpSpace *space, void *unused)
+{
+	return 0;
 }
 
 #pragma mark Ignore Meteor-Boundary Collisions
@@ -129,6 +172,8 @@ kamikazeTouchCollisionBegin(cpArbiter *arb, cpSpace *space, void *unused)
 	
 	TouchNode *tNode = (TouchNode *)kamikaze->data;
 	[tNode.controller addCollisionAtPosition:cpArbiterGetPoint(arb, 0)];
+	
+	return 1;
 }
 
 static int
@@ -142,6 +187,8 @@ kamikazeMeteorCollisionBegin(cpArbiter *arb, cpSpace *space, void *unused)
 	
 	TouchNode *tNode = (TouchNode *)kamikaze->data;
 	[tNode.controller addCollisionAtPosition:cpArbiterGetPoint(arb, 0)];
+	
+	return 1;
 }
 
 static int
@@ -154,6 +201,8 @@ kamikazeBoundaryCollisionBegin(cpArbiter *arb, cpSpace *space, void *unused)
 	
 	TouchNode *tNode = (TouchNode *)kamikaze->data;
 	[tNode.controller addCollisionAtPosition:cpArbiterGetPoint(arb, 0)];
+	
+	return 1;
 }
 
 static int
@@ -167,6 +216,8 @@ kamikazePulseCollisionBegin(cpArbiter *arb, cpSpace *space, void *unused)
 	
 	TouchNode *tNode = (TouchNode *)kamikaze->data;
 	[tNode.controller addCollisionAtPosition:cpArbiterGetPoint(arb, 0)];
+	
+	return 1;
 }
 
 static void
@@ -190,7 +241,7 @@ postStepPulseNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 
 @implementation GameLayer
 
-@synthesize pulseNodes, player, blendSheet, noBlendSheet;
+@synthesize pulseNodes, player, blendSheet, noBlendSheet, bgLayer;
 
 - (id)init {
 	if ((self = [super init])) {
@@ -302,15 +353,15 @@ postStepPulseNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 		 ** GAME ASSETS INIT
 		 *****/
 		
+		bgLayer = [[BackgroundLayer alloc] initWithSpace:space];
+		[self addChild:bgLayer z:0];
+		
 		noBlendSheet = [[CCSpriteSheet alloc] initWithFile:@"NoBlendSheet.png" capacity:20];
 		[self addChild:noBlendSheet];
 		
 		blendSheet = [[CCSpriteSheet alloc] initWithFile:@"BlendSheet.png" capacity:40];
 		blendSheet.blendFunc = (ccBlendFunc){ GL_ONE, GL_ONE };
 		[self addChild:blendSheet];
-		
-		bgLayer = [[BackgroundLayer alloc] init];
-		[self addChild:bgLayer z:0];
 		
 		player = [[Player alloc] init];
 		[player setColor:[UIColor colorWithRed:0.259 green:0.404 blue:0.875 alpha:1.0]];
@@ -346,6 +397,10 @@ postStepPulseNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 		cpSpaceAddCollisionHandler(space, KAMIKAZE_COL_GROUP, METEOR_COL_GROUP, kamikazeMeteorCollisionBegin, NULL, NULL, NULL, NULL);
 		cpSpaceAddCollisionHandler(space, KAMIKAZE_COL_GROUP, BOUNDARY_COL_GROUP, kamikazeBoundaryCollisionBegin, NULL, NULL, NULL, NULL);
 		cpSpaceAddCollisionHandler(space, KAMIKAZE_COL_GROUP, PULSENODE_COL_GROUP, kamikazePulseCollisionBegin, NULL, NULL, NULL, NULL);
+		cpSpaceAddCollisionHandler(space, PARTICLE_COL_GROUP, TOUCHNODE_COL_GROUP, particleTouchCollisionBegin, NULL, NULL, NULL, NULL);
+		cpSpaceAddCollisionHandler(space, PARTICLE_COL_GROUP, PARTICLE_COL_GROUP, particleParticleCollisionBegin, NULL, NULL, NULL, NULL);
+		cpSpaceAddCollisionHandler(space, PARTICLE_COL_GROUP, METEOR_COL_GROUP, particleMeteorCollisionBegin, NULL, NULL, NULL, NULL);
+		cpSpaceAddCollisionHandler(space, PARTICLE_COL_GROUP, PULSENODE_COL_GROUP, particlePulseCollisionBegin, NULL, NULL, NULL, NULL);
 		
 		[self addChild:pulseNode];
 	}
@@ -374,7 +429,7 @@ postStepPulseNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 	[self schedule:@selector(mainStep:)];
 	[self schedule:@selector(addTouchNodeStep:) interval:5.0];
 	[self schedule:@selector(scoreStep:) interval:1.0/5.0];
-	[self schedule:@selector(gameStep:) interval:1.0];
+	//[self schedule:@selector(gameStep:) interval:1.0];
 }
 
 - (void)onExit {
@@ -401,6 +456,8 @@ postStepPulseNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 	
 	cpSpaceHashEach(space->activeShapes, &eachShape, self);
 	cpSpaceHashEach(space->staticShapes, &eachShape, NULL);
+	
+	[bgLayer update];
 }
 
 - (void)scoreStep:(ccTime)dt {

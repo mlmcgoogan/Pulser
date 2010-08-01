@@ -35,6 +35,7 @@
 @property (nonatomic, readonly) Player *player;
 @property (nonatomic, retain) CCSpriteSheet *blendSheet;
 @property (nonatomic, retain) CCSpriteSheet *noBlendSheet;
+@property (nonatomic, retain) BackgroundLayer *bgLayer;
 
 // Chipmunk
 - (void)mainStep:(ccTime) dt;
