@@ -33,9 +33,46 @@
 #import "CCTextureCache.h"
 #import "ccMacros.h"
 
+// chipmunk
+#import "Constants.h"
+
 // support
 #import "Support/OpenGL_Internal.h"
 #import "Support/CGPointExtension.h"
+
+
+NSMutableArray *repulsers = nil;
+NSMutableArray *attractors = nil;
+
+#pragma mark Chipmunk Velocity damping
+static void
+dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
+{
+	damping = 0.999;
+	
+	id closest = nil;
+	for (id ccObject in repulsers) {
+		if (closest == nil)
+			closest = ccObject;
+		else {
+			float dist = fabsf(ccpDistance(body->p, [ccObject position]));
+			if (dist < fabsf(ccpDistance(body->p, [closest position]))) {
+				closest = ccObject;
+			}
+		}
+	}
+	
+	if (closest != nil) {
+		cpVect sub = cpvsub(body->p, [closest position]);
+		float dist = fabsf(cpvdist(body->p, [closest position]));
+		sub = cpvmult(sub, 5000.0);
+		gravity = cpvmult(sub, 1/(dist*dist));
+	}
+    
+    
+	cpBodyUpdateVelocity(body, gravity, damping, dt);
+}
+
 
 @implementation CCQuadPhysicsParticleSystem
 
@@ -47,6 +84,7 @@
 	if( (self=[super init]) ) {
 		
 		totalParticleCount = numberOfParticles;
+        space = aSpace;
 		
 		// allocating data space
 		quads = malloc( sizeof(quads[0]) * numberOfParticles );
@@ -91,6 +129,8 @@
 	free(indices);
 	free(particles);
 	glDeleteBuffers(1, &quadsID);
+    [repulsers release];
+    repulsers = nil;
 	
 	[super dealloc];
 }
@@ -105,7 +145,19 @@
 		particle->color.b = 255.0 * CCRANDOM_0_1() / 255.0;
 		particle->color.a = 1.0;
 		particle->rotation = 0.0;
-		particle->size = 2.0;
+		particle->size = 5.0;
+        
+        cpBody *body = cpBodyNew(10.0, INFINITY);
+        body->p = particle->position;
+        body->velocity_func = dampingVelocityFunc;
+        cpSpaceAddBody(space, body);
+        
+        cpShape *shape = cpCircleShapeNew(body, particle->size, cpvzero);
+        shape->e = 0.8;
+        shape->u = 0.2;
+        shape->collision_type = PARTICLE_COL_GROUP;
+        shape->data = particle;
+        cpSpaceAddShape(space, shape);
 	}
 }
 
@@ -151,6 +203,7 @@
 }
 
 - (void)updateQuad {
+    NSLog(@"updating quad");
 	for (int i=0 ; i<totalParticleCount ; i++) {
 		ccQuadPhysicsParticle *p = &particles[i];
 		
@@ -159,6 +212,24 @@
 		quads[i].br.colors = p->color;
 		quads[i].tl.colors = p->color;
 		quads[i].tr.colors = p->color;
+        
+        if ([repulsers count] > 0) {		                
+            float closestDist = 1024.0;
+            for (id *ccObject in repulsers) {
+                float dist = ccpDistance([ccObject position], p->position);
+                if (dist < closestDist)
+                    closestDist = dist;
+            }
+            
+            if (closestDist > 200.0) {
+                p->color.r = 0.0;
+                p->size = 5.0;
+            }
+            else {
+                p->color.r =  (1024.0-closestDist) / (1024.0);
+                p->size = 5.0;
+            }
+        }
 		
 		CGPoint newPos = p->position;
 		
@@ -279,6 +350,29 @@
 	
 	// restore GL default state
 	// -
+}
+
+- (void)addRepulser:(id)ccObject {
+	if ([ccObject respondsToSelector:@selector(position)]) {
+        if (repulsers == nil)
+            repulsers = [[NSMutableArray alloc] init];
+        
+        [repulsers addObject:ccObject];
+	}
+}
+
+- (void)removeRepulser:(id)ccObject {
+    if (repulsers != nil) {
+        if ([repulsers containsObject:ccObject]) {
+            if ([repulsers count] == 1) {
+                [repulsers release];
+                repulsers = nil;
+            }
+            else {
+                [repulsers removeObject:ccObject];
+            }
+        }
+    }
 }
 
 @end

@@ -14,7 +14,7 @@
 #import "Constants.h"
 #import "SpriteAutoRemoval.h"
 #import "BackgroundLayer.h"
-#import "CCPhysicsParticleSystem.h"
+#import "CCQuadPhysicsParticleSystem.h"
 
 #define SCORELABEL_PADDING 24.0
 
@@ -34,14 +34,14 @@ eachShape(void *ptr, void* unused)
 	
 	// Particles
 	if (shape->collision_type == PARTICLE_COL_GROUP) {
-		ccPhysicsPointSprite *particle = (ccPhysicsPointSprite *)shape->data;
+        ccQuadPhysicsParticle *particle = shape->data;
 		
 		cpVect p = shape->body->p;
 		
 		if (p.x > 1014.0 || p.x < 10.0 || p.y > 758.0 || p.y < 10.0)
 			shape->body->p = cpv(1024.0 * CCRANDOM_0_1(), 768.0 * CCRANDOM_0_1());
 		
-		particle->pos = shape->body->p;
+		particle->position = shape->body->p;
 	}
 	
 	// All other ccnode objects

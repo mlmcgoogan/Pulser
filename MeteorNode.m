@@ -9,6 +9,7 @@
 #import "MeteorNode.h"
 #import "GameLayer.h"
 #import "Constants.h"
+#import "CCQuadPhysicsParticleSystem.h"
 
 
 @interface MeteorNode (PrivateMethods)
@@ -71,6 +72,7 @@
 	[super onEnter];
 	
 	//[[self.pulseNode.controller.bgLayer particleSystem] addEnemy:particleSystem];
+    [[self.pulseNode.controller.bgLayer particleSystem] addRepulser:particleSystem];
 	
 	cpBody *body = shape->body;
 	CGPoint delta = ccpMult(unitVector, 1800.0);
@@ -80,6 +82,7 @@
 - (void)onExit {
 	
 	//[[self.pulseNode.controller.bgLayer particleSystem] removeEnemy:particleSystem];
+    [[self.pulseNode.controller.bgLayer particleSystem] removeRepulser:particleSystem];
 	[super onExit];
 }
 

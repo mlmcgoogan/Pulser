@@ -26,6 +26,8 @@
 
 - (void)onEnter {
 	[super onEnter];
+    
+    /*
 	[CCTexture2D setDefaultAlphaPixelFormat:kTexture2DPixelFormat_RGB565];
 	CCSprite *spr = [CCSprite spriteWithFile:@"bg1.png"];
 	spr.anchorPoint = ccp(0,0);
@@ -41,6 +43,8 @@
 	[CCTexture2D setDefaultAlphaPixelFormat:kTexture2DPixelFormat_Default];
 	
 	[self addChild:rTex];
+     */
+    
 	[self addChild:particleSystem];
 }
 
@@ -55,7 +59,7 @@
 }
 
 - (void)update {
-	[particleSystem postStep];
+	[particleSystem updateQuad];
 }
 
 @end
