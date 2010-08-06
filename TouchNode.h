@@ -12,7 +12,7 @@
 @class Player;
 @class GameLayer;
 
-#define TOUCHNODE_RADIUS 46.0f
+#define TOUCHNODE_RADIUS 40.0f
 #define TOUCHNODE_MASS 50.0f
 
 typedef enum BoundType {

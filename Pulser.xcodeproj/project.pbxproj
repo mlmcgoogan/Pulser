@@ -56,6 +56,10 @@
 		50F4144A10692EE7002A0D5E /* fps_images.png in Resources */ = {isa = PBXBuildFile; fileRef = 50F4144510692EE7002A0D5E /* fps_images.png */; };
 		50F4144B10692EE7002A0D5E /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 50F4144610692EE7002A0D5E /* Icon.png */; };
 		A30EA6CA117E720D001EDE37 /* GameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = A30EA6C9117E720D001EDE37 /* GameScene.m */; };
+		A3491984120B9E36000D6CC6 /* CDAudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A349197C120B9E35000D6CC6 /* CDAudioManager.m */; };
+		A3491985120B9E36000D6CC6 /* CDOpenALSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = A349197F120B9E36000D6CC6 /* CDOpenALSupport.m */; };
+		A3491986120B9E36000D6CC6 /* CocosDenshion.m in Sources */ = {isa = PBXBuildFile; fileRef = A3491981120B9E36000D6CC6 /* CocosDenshion.m */; };
+		A3491987120B9E36000D6CC6 /* SimpleAudioEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = A3491983120B9E36000D6CC6 /* SimpleAudioEngine.m */; };
 		A3710044117F7BB400C435F8 /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = A3710043117F7BB400C435F8 /* Player.m */; };
 		A371004C117F7BBF00C435F8 /* TouchNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A3710047117F7BBF00C435F8 /* TouchNode.m */; };
 		A371004D117F7BBF00C435F8 /* PulseNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A3710049117F7BBF00C435F8 /* PulseNode.m */; };
@@ -63,11 +67,17 @@
 		A3710059117F7BD100C435F8 /* pulseNode_144.png in Resources */ = {isa = PBXBuildFile; fileRef = A3710056117F7BD100C435F8 /* pulseNode_144.png */; };
 		A371005C117F7BDB00C435F8 /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = A371005B117F7BDB00C435F8 /* fire.png */; };
 		A371005F117F7CC400C435F8 /* GameLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A371005E117F7CC400C435F8 /* GameLayer.m */; };
+		A374974E1208E9D70079C9F6 /* meteorLauncher.png in Resources */ = {isa = PBXBuildFile; fileRef = A374974D1208E9D70079C9F6 /* meteorLauncher.png */; };
+		A37497561208EFDC0079C9F6 /* gravityWell.plist in Resources */ = {isa = PBXBuildFile; fileRef = A37497551208EFDC0079C9F6 /* gravityWell.plist */; };
 		A387081D11E9590000C6C80D /* BackgroundEmitter.plist in Resources */ = {isa = PBXBuildFile; fileRef = A387081C11E9590000C6C80D /* BackgroundEmitter.plist */; };
 		A387082311E95F6300C6C80D /* CCParticleSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = A387082211E95F6300C6C80D /* CCParticleSystem.m */; };
 		A3870DF911EF7F3E00C6C80D /* CCPhysicsParticleSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = A3870DF811EF7F3E00C6C80D /* CCPhysicsParticleSystem.m */; };
-		A387101211F01F7A00C6C80D /* bg1.png in Resources */ = {isa = PBXBuildFile; fileRef = A387101111F01F7A00C6C80D /* bg1.png */; };
-		A387102911F0319C00C6C80D /* CCQuadPhysicsParticleSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = A387102811F0319C00C6C80D /* CCQuadPhysicsParticleSystem.m */; };
+		A38CFF40120768EC00B931C2 /* hud_score.png in Resources */ = {isa = PBXBuildFile; fileRef = A38CFF3F120768EC00B931C2 /* hud_score.png */; };
+		A38CFF5412076B8E00B931C2 /* HUDLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A38CFF5312076B8E00B931C2 /* HUDLayer.m */; };
+		A3B26890120B2A1100BF4E26 /* meteor.png in Resources */ = {isa = PBXBuildFile; fileRef = A3B2688F120B2A1100BF4E26 /* meteor.png */; };
+		A3B268AE120B336B00BF4E26 /* bg1.png in Resources */ = {isa = PBXBuildFile; fileRef = A3B268AD120B336B00BF4E26 /* bg1.png */; };
+		A3B268C3120B396500BF4E26 /* CCQuadPhysicsParticleSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = A3B268C2120B396500BF4E26 /* CCQuadPhysicsParticleSystem.m */; };
+		A3C1E0071208B9C600CF740B /* STFangsong.fnt in Resources */ = {isa = PBXBuildFile; fileRef = A3C1E0061208B9C600CF740B /* STFangsong.fnt */; };
 		A3C2823E11B4455400D94B79 /* tapCircle.png in Resources */ = {isa = PBXBuildFile; fileRef = A3C2823D11B4455400D94B79 /* tapCircle.png */; };
 		A3E4EC7711E7927C002023D0 /* Background1.png in Resources */ = {isa = PBXBuildFile; fileRef = A3E4EC7611E7927C002023D0 /* Background1.png */; };
 		A3E4EC8711E7955F002023D0 /* BackgroundLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E4EC8611E7955F002023D0 /* BackgroundLayer.m */; };
@@ -237,6 +247,15 @@
 		50F4144710692EE7002A0D5E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A30EA6C8117E720D001EDE37 /* GameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameScene.h; sourceTree = "<group>"; };
 		A30EA6C9117E720D001EDE37 /* GameScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameScene.m; sourceTree = "<group>"; };
+		A349197B120B9E35000D6CC6 /* CDAudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDAudioManager.h; sourceTree = "<group>"; };
+		A349197C120B9E35000D6CC6 /* CDAudioManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDAudioManager.m; sourceTree = "<group>"; };
+		A349197D120B9E35000D6CC6 /* CDConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDConfig.h; sourceTree = "<group>"; };
+		A349197E120B9E36000D6CC6 /* CDOpenALSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDOpenALSupport.h; sourceTree = "<group>"; };
+		A349197F120B9E36000D6CC6 /* CDOpenALSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDOpenALSupport.m; sourceTree = "<group>"; };
+		A3491980120B9E36000D6CC6 /* CocosDenshion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocosDenshion.h; sourceTree = "<group>"; };
+		A3491981120B9E36000D6CC6 /* CocosDenshion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocosDenshion.m; sourceTree = "<group>"; };
+		A3491982120B9E36000D6CC6 /* SimpleAudioEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleAudioEngine.h; sourceTree = "<group>"; };
+		A3491983120B9E36000D6CC6 /* SimpleAudioEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleAudioEngine.m; sourceTree = "<group>"; };
 		A3710042117F7BB400C435F8 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
 		A3710043117F7BB400C435F8 /* Player.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Player.m; sourceTree = "<group>"; };
 		A3710046117F7BBF00C435F8 /* TouchNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchNode.h; sourceTree = "<group>"; };
@@ -249,14 +268,21 @@
 		A371005B117F7BDB00C435F8 /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fire.png; sourceTree = "<group>"; };
 		A371005D117F7CC400C435F8 /* GameLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameLayer.h; sourceTree = "<group>"; };
 		A371005E117F7CC400C435F8 /* GameLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameLayer.m; sourceTree = "<group>"; };
+		A374974D1208E9D70079C9F6 /* meteorLauncher.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = meteorLauncher.png; sourceTree = "<group>"; };
+		A37497551208EFDC0079C9F6 /* gravityWell.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = gravityWell.plist; sourceTree = "<group>"; };
 		A387081C11E9590000C6C80D /* BackgroundEmitter.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BackgroundEmitter.plist; sourceTree = "<group>"; };
 		A387082111E95F6300C6C80D /* CCParticleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCParticleSystem.h; sourceTree = "<group>"; };
 		A387082211E95F6300C6C80D /* CCParticleSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCParticleSystem.m; sourceTree = "<group>"; };
 		A3870DF711EF7F3E00C6C80D /* CCPhysicsParticleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCPhysicsParticleSystem.h; sourceTree = "<group>"; };
 		A3870DF811EF7F3E00C6C80D /* CCPhysicsParticleSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCPhysicsParticleSystem.m; sourceTree = "<group>"; };
-		A387101111F01F7A00C6C80D /* bg1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg1.png; sourceTree = "<group>"; };
-		A387102711F0319C00C6C80D /* CCQuadPhysicsParticleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCQuadPhysicsParticleSystem.h; sourceTree = "<group>"; };
-		A387102811F0319C00C6C80D /* CCQuadPhysicsParticleSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCQuadPhysicsParticleSystem.m; sourceTree = "<group>"; };
+		A38CFF3F120768EC00B931C2 /* hud_score.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hud_score.png; sourceTree = "<group>"; };
+		A38CFF5212076B8E00B931C2 /* HUDLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HUDLayer.h; sourceTree = "<group>"; };
+		A38CFF5312076B8E00B931C2 /* HUDLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HUDLayer.m; sourceTree = "<group>"; };
+		A3B2688F120B2A1100BF4E26 /* meteor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = meteor.png; sourceTree = "<group>"; };
+		A3B268AD120B336B00BF4E26 /* bg1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg1.png; sourceTree = "<group>"; };
+		A3B268C1120B396500BF4E26 /* CCQuadPhysicsParticleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCQuadPhysicsParticleSystem.h; sourceTree = "<group>"; };
+		A3B268C2120B396500BF4E26 /* CCQuadPhysicsParticleSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCQuadPhysicsParticleSystem.m; sourceTree = "<group>"; };
+		A3C1E0061208B9C600CF740B /* STFangsong.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = STFangsong.fnt; sourceTree = "<group>"; };
 		A3C2823D11B4455400D94B79 /* tapCircle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tapCircle.png; sourceTree = "<group>"; };
 		A3E4EC7611E7927C002023D0 /* Background1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Background1.png; sourceTree = "<group>"; };
 		A3E4EC8511E7955F002023D0 /* BackgroundLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundLayer.h; sourceTree = "<group>"; };
@@ -563,6 +589,8 @@
 		2D500B1D0D5A766B00DBA0E3 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				A38CFF5212076B8E00B931C2 /* HUDLayer.h */,
+				A38CFF5312076B8E00B931C2 /* HUDLayer.m */,
 				A3710042117F7BB400C435F8 /* Player.h */,
 				A3710043117F7BB400C435F8 /* Player.m */,
 				A30EA6C8117E720D001EDE37 /* GameScene.h */,
@@ -594,6 +622,7 @@
 		506EDAA3102F461B00A389B3 /* cocos2d Sources */ = {
 			isa = PBXGroup;
 			children = (
+				A349197A120B9E35000D6CC6 /* CocosDenshion */,
 				A3EF904811B5C5F100862B80 /* Chipmunk */,
 				A3EF8F6F11B5C52200862B80 /* cocos2d */,
 				504DFC4110AF1557006D82FE /* cocoslive */,
@@ -665,8 +694,10 @@
 		50F4144210692EE7002A0D5E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A3C1E0051208B9B300CF740B /* font */,
 				A387081C11E9590000C6C80D /* BackgroundEmitter.plist */,
 				A3E4ECE311E7E61B002023D0 /* Kamikaze.plist */,
+				A37497551208EFDC0079C9F6 /* gravityWell.plist */,
 				A3EF915811B5D5B000862B80 /* pulseNode.plist */,
 				A3710054117F7BD100C435F8 /* images */,
 				A371005B117F7BDB00C435F8 /* fire.png */,
@@ -677,6 +708,22 @@
 				50F4144710692EE7002A0D5E /* Info.plist */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		A349197A120B9E35000D6CC6 /* CocosDenshion */ = {
+			isa = PBXGroup;
+			children = (
+				A349197B120B9E35000D6CC6 /* CDAudioManager.h */,
+				A349197C120B9E35000D6CC6 /* CDAudioManager.m */,
+				A349197D120B9E35000D6CC6 /* CDConfig.h */,
+				A349197E120B9E36000D6CC6 /* CDOpenALSupport.h */,
+				A349197F120B9E36000D6CC6 /* CDOpenALSupport.m */,
+				A3491980120B9E36000D6CC6 /* CocosDenshion.h */,
+				A3491981120B9E36000D6CC6 /* CocosDenshion.m */,
+				A3491982120B9E36000D6CC6 /* SimpleAudioEngine.h */,
+				A3491983120B9E36000D6CC6 /* SimpleAudioEngine.m */,
+			);
+			path = CocosDenshion;
 			sourceTree = "<group>";
 		};
 		A3710045117F7BBF00C435F8 /* Assets */ = {
@@ -697,7 +744,10 @@
 		A3710054117F7BD100C435F8 /* images */ = {
 			isa = PBXGroup;
 			children = (
-				A387101111F01F7A00C6C80D /* bg1.png */,
+				A3B268AD120B336B00BF4E26 /* bg1.png */,
+				A3B2688F120B2A1100BF4E26 /* meteor.png */,
+				A374974D1208E9D70079C9F6 /* meteorLauncher.png */,
+				A38CFF3F120768EC00B931C2 /* hud_score.png */,
 				A3E4ECB911E7C915002023D0 /* BlendSheet.png */,
 				A3E4ECBA11E7C915002023D0 /* NoBlendSheet.png */,
 				A3E4EC7611E7927C002023D0 /* Background1.png */,
@@ -705,6 +755,14 @@
 				A3710056117F7BD100C435F8 /* pulseNode_144.png */,
 			);
 			name = images;
+			sourceTree = "<group>";
+		};
+		A3C1E0051208B9B300CF740B /* font */ = {
+			isa = PBXGroup;
+			children = (
+				A3C1E0061208B9C600CF740B /* STFangsong.fnt */,
+			);
+			name = font;
 			sourceTree = "<group>";
 		};
 		A3EF8F6F11B5C52200862B80 /* cocos2d */ = {
@@ -777,8 +835,8 @@
 				A3EF8FB011B5C52200862B80 /* CCPointParticleSystem.m */,
 				A3870DF711EF7F3E00C6C80D /* CCPhysicsParticleSystem.h */,
 				A3870DF811EF7F3E00C6C80D /* CCPhysicsParticleSystem.m */,
-				A387102711F0319C00C6C80D /* CCQuadPhysicsParticleSystem.h */,
-				A387102811F0319C00C6C80D /* CCQuadPhysicsParticleSystem.m */,
+				A3B268C1120B396500BF4E26 /* CCQuadPhysicsParticleSystem.h */,
+				A3B268C2120B396500BF4E26 /* CCQuadPhysicsParticleSystem.m */,
 				A3EF8FB111B5C52200862B80 /* CCProgressTimer.h */,
 				A3EF8FB211B5C52200862B80 /* CCProgressTimer.m */,
 				A3EF8FB311B5C52200862B80 /* CCProgressTimerActions.h */,
@@ -1079,7 +1137,12 @@
 				A3E4ECBC11E7C915002023D0 /* NoBlendSheet.png in Resources */,
 				A3E4ECE411E7E61B002023D0 /* Kamikaze.plist in Resources */,
 				A387081D11E9590000C6C80D /* BackgroundEmitter.plist in Resources */,
-				A387101211F01F7A00C6C80D /* bg1.png in Resources */,
+				A38CFF40120768EC00B931C2 /* hud_score.png in Resources */,
+				A3C1E0071208B9C600CF740B /* STFangsong.fnt in Resources */,
+				A374974E1208E9D70079C9F6 /* meteorLauncher.png in Resources */,
+				A37497561208EFDC0079C9F6 /* gravityWell.plist in Resources */,
+				A3B26890120B2A1100BF4E26 /* meteor.png in Resources */,
+				A3B268AE120B336B00BF4E26 /* bg1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1192,7 +1255,12 @@
 				A3E4EC8711E7955F002023D0 /* BackgroundLayer.m in Sources */,
 				A387082311E95F6300C6C80D /* CCParticleSystem.m in Sources */,
 				A3870DF911EF7F3E00C6C80D /* CCPhysicsParticleSystem.m in Sources */,
-				A387102911F0319C00C6C80D /* CCQuadPhysicsParticleSystem.m in Sources */,
+				A38CFF5412076B8E00B931C2 /* HUDLayer.m in Sources */,
+				A3B268C3120B396500BF4E26 /* CCQuadPhysicsParticleSystem.m in Sources */,
+				A3491984120B9E36000D6CC6 /* CDAudioManager.m in Sources */,
+				A3491985120B9E36000D6CC6 /* CDOpenALSupport.m in Sources */,
+				A3491986120B9E36000D6CC6 /* CocosDenshion.m in Sources */,
+				A3491987120B9E36000D6CC6 /* SimpleAudioEngine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

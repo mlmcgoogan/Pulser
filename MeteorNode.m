@@ -28,6 +28,19 @@
 		
 		self.pulseNode = pNode;
 		
+		sprite1 = [[CCSprite spriteWithFile:@"meteor.png"] retain];
+		sprite1.color = ccc3(200, 40, 30);
+		sprite1.blendFunc = (ccBlendFunc){GL_ONE, GL_ONE};
+		sprite1.position = startPos;
+		
+		sprite2 = [[CCSprite spriteWithFile:@"meteor.png"] retain];
+		sprite2.color = ccc3(150, 10, 10);
+		sprite2.blendFunc = (ccBlendFunc){GL_ONE, GL_ONE};
+		sprite2.position = startPos;
+		
+		[self addChild:sprite1];
+		[self addChild:sprite2];
+		
 		cpBody *body = cpBodyNew(METEOR_MASS, INFINITY);
 		body->p = startPos;
 		
@@ -42,14 +55,18 @@
 		
 		CGPoint grav = ccpMult(dirUnitVec, 10.0);
 		
-		particleSystem = [[CCParticleMeteor alloc] initWithTotalParticles:110];
-		particleSystem.startSize = 64;
+		particleSystem = [[CCParticleMeteor alloc] initWithTotalParticles:200];
+		particleSystem.startSize = 5;
+		particleSystem.startSizeVar = 10;
 		particleSystem.gravity = grav;
 		particleSystem.position = startPos;
-		particleSystem.startColor = ccc4FFromccc4B(ccc4(0,0,117,255));
-		particleSystem.startColorVar = ccc4FFromccc4B(ccc4(158,0,0,0));
-		particleSystem.endColor = ccc4FFromccc4B(ccc4(97,148,255,255));
-		particleSystem.endColorVar = ccc4FFromccc4B(ccc4(255,0,178,0));
+        particleSystem.life = 1.0;
+        particleSystem.lifeVar = 0.5;
+		particleSystem.posVar = ccp(10.0,10.0);
+		particleSystem.startColor = ccc4FFromccc4B(ccc4(117,0,0,255));
+		particleSystem.startColorVar = ccc4FFromccc4B(ccc4(0,100,0,0));
+		particleSystem.endColor = ccc4FFromccc4B(ccc4(200,80,90,255));
+		particleSystem.endColorVar = ccc4FFromccc4B(ccc4(150,40,40,0));
 		start = startPos;
 		unitVector = dirUnitVec;
 		
@@ -64,6 +81,8 @@
 
 - (void)dealloc {
 	[particleSystem release];
+	[sprite1 release];
+	[sprite2 release];
 	[pulseNode release];
 	[super dealloc];
 }
@@ -71,7 +90,9 @@
 - (void)onEnter {
 	[super onEnter];
 	
-	//[[self.pulseNode.controller.bgLayer particleSystem] addEnemy:particleSystem];
+	[sprite1 runAction:[CCRepeatForever actionWithAction:[CCRotateBy actionWithDuration:1/20 angle:2.0]]];
+	[sprite2 runAction:[CCRepeatForever actionWithAction:[CCRotateBy actionWithDuration:1/50 angle:-2.0]]];
+	
     [[self.pulseNode.controller.bgLayer particleSystem] addRepulser:particleSystem];
 	
 	cpBody *body = shape->body;
@@ -80,14 +101,15 @@
 }
 
 - (void)onExit {
-	
-	//[[self.pulseNode.controller.bgLayer particleSystem] removeEnemy:particleSystem];
     [[self.pulseNode.controller.bgLayer particleSystem] removeRepulser:particleSystem];
+	
 	[super onExit];
 }
 
 - (void)setPosition:(CGPoint)pos {
 	[self.particleSystem setPosition:pos];
+	sprite1.position = pos;
+	sprite2.position = pos;
 }
 
 - (void)setRotation:(float)rot {

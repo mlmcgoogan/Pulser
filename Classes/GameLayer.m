@@ -38,8 +38,15 @@ eachShape(void *ptr, void* unused)
 		
 		cpVect p = shape->body->p;
 		
+		GameLayer *gLayer = (GameLayer *)unused;
+		CGPoint center = [[[gLayer.pulseNodes objectAtIndex:0] particleSystem] position];
+		
 		if (p.x > 1014.0 || p.x < 10.0 || p.y > 758.0 || p.y < 10.0)
 			shape->body->p = cpv(1024.0 * CCRANDOM_0_1(), 768.0 * CCRANDOM_0_1());
+		else if (p.x > center.x-10.0 && p.x < center.x+10.0 && p.y > center.y-10.0 && p.y < center.y+10.0)
+			shape->body->p = cpv(1024.0 * CCRANDOM_0_1(), 768.0 * CCRANDOM_0_1());
+		
+
 		
 		particle->position = shape->body->p;
 	}
@@ -160,6 +167,12 @@ postStepTouchNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 }
 
 #pragma mark Kamikaze Collisions
+
+static int
+kamikazeParticleCollisionBegin(cpArbiter *arb, cpSpace *space, void *unused)
+{
+	return 0;
+}
 
 static int
 kamikazeTouchCollisionBegin(cpArbiter *arb, cpSpace *space, void *unused)
@@ -367,7 +380,7 @@ postStepPulseNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 		[player setColor:[UIColor colorWithRed:0.259 green:0.404 blue:0.875 alpha:1.0]];
 		
 		CGSize s = [[CCDirector sharedDirector] winSize];
-		PulseNode *pulseNode = [[PulseNode alloc] initWithPosition:CGPointMake(85.0, (s.height / 2.0)) space:space];
+		PulseNode *pulseNode = [[PulseNode alloc] initWithPosition:CGPointMake(85.0, (s.height / 2.0)) space:space type:kmMeteorPulseNodeType];
 		pulseNode.player = player;
 		pulseNode.controller = self;
 		[pulseNodes addObject:pulseNode];
@@ -397,6 +410,7 @@ postStepPulseNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 		cpSpaceAddCollisionHandler(space, KAMIKAZE_COL_GROUP, METEOR_COL_GROUP, kamikazeMeteorCollisionBegin, NULL, NULL, NULL, NULL);
 		cpSpaceAddCollisionHandler(space, KAMIKAZE_COL_GROUP, BOUNDARY_COL_GROUP, kamikazeBoundaryCollisionBegin, NULL, NULL, NULL, NULL);
 		cpSpaceAddCollisionHandler(space, KAMIKAZE_COL_GROUP, PULSENODE_COL_GROUP, kamikazePulseCollisionBegin, NULL, NULL, NULL, NULL);
+		cpSpaceAddCollisionHandler(space, KAMIKAZE_COL_GROUP, PARTICLE_COL_GROUP, kamikazeParticleCollisionBegin, NULL, NULL, NULL, NULL);
 		cpSpaceAddCollisionHandler(space, PARTICLE_COL_GROUP, TOUCHNODE_COL_GROUP, particleTouchCollisionBegin, NULL, NULL, NULL, NULL);
 		cpSpaceAddCollisionHandler(space, PARTICLE_COL_GROUP, PARTICLE_COL_GROUP, particleParticleCollisionBegin, NULL, NULL, NULL, NULL);
 		cpSpaceAddCollisionHandler(space, PARTICLE_COL_GROUP, METEOR_COL_GROUP, particleMeteorCollisionBegin, NULL, NULL, NULL, NULL);
@@ -427,9 +441,9 @@ postStepPulseNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 	
 	
 	[self schedule:@selector(mainStep:)];
-	[self schedule:@selector(addTouchNodeStep:) interval:5.0];
+	[self schedule:@selector(addTouchNodeStep:) interval:10.0];
 	[self schedule:@selector(scoreStep:) interval:1.0/5.0];
-	//[self schedule:@selector(gameStep:) interval:1.0];
+	[self schedule:@selector(gameStep:) interval:30.0];
 }
 
 - (void)onExit {
@@ -466,9 +480,9 @@ postStepPulseNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 }
 
 - (void)gameStep:(ccTime) dt {
-	gameRuntime++;
-	int tNodeCount = [[player touchNodes] count];
-	
+	if ([pulseNodes count] < 2) {
+		
+	}
 }
 
 #pragma mark -
@@ -478,6 +492,8 @@ postStepPulseNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 	CCParticleSystem *pSys = [[[CCParticleExplosion alloc] initWithTotalParticles:200] autorelease];
 	pSys.position = pos;
 	pSys.gravity = CGPointZero;
+	pSys.life = 1;
+	pSys.lifeVar = 1;
 	pSys.startColor = ccc4FFromccc4B(ccc4(51,102,179,255));
 	pSys.startColorVar = ccc4FFromccc4B(ccc4(10,10,50,0));
 	pSys.endColor = ccc4FFromccc4B(ccc4(0,0,0,255));
@@ -489,7 +505,10 @@ postStepPulseNodeRemoval(cpSpace *space, cpShape *shape, void *unused)
 #pragma mark Adding TouchNodes
 
 - (void)addTouchNodeStep:(ccTime)dt {
-	[self addTouchNode];
+	int count = [[player touchNodes] count];
+	
+	if (count <= 3)
+		[self addTouchNode];
 }
 
 - (void)addTouchNode {

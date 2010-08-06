@@ -17,6 +17,7 @@
 @interface MeteorNode : CCNode {
 	cpShape *shape;
 	
+	CCSprite *sprite1,*sprite2;
 	CCParticleSystem *particleSystem;
 	CGPoint start;
 	CGPoint unitVector;

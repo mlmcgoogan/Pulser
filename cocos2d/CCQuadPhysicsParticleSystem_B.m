@@ -44,17 +44,61 @@
 NSMutableArray *repulsers = nil;
 NSMutableArray *attractors = nil;
 
+#pragma mark Chipmunk Velocity damping
+static void
+dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
+{
+	damping = 0.999;
+	/*
+	id closest = nil;
+	for (id ccObject in repulsers) {
+		if (closest == nil)
+			closest = ccObject;
+		else {
+			float dist = fabsf(ccpDistance(body->p, [ccObject position]));
+			if (dist < fabsf(ccpDistance(body->p, [closest position]))) {
+				closest = ccObject;
+			}
+		}
+	}
+	
+	if (closest != nil) {
+		cpVect sub = cpvsub(body->p, [closest position]);
+		float dist = fabsf(cpvdist(body->p, [closest position]));
+		sub = cpvmult(sub, 5000.0);
+		gravity = cpvmult(sub, 1/(dist*dist));
+	}*/
+	
+	for (id ccObject in repulsers) {
+		cpVect sub = cpvsub(body->p, [ccObject position]);
+		float dist = fabsf(cpvdist(body->p, [ccObject position]));
+		sub = cpvmult(sub, 5000.0);
+		gravity = cpvadd(gravity,cpvmult(sub, 1/(dist*dist)));
+	}
+	
+	for (id ccObject in attractors) {
+		cpVect sub = cpvsub([ccObject position], body->p);
+		float dist = fabsf(cpvdist(body->p, [ccObject position]));
+		sub = cpvmult(sub, 5000.0);
+		gravity = cpvadd(gravity,cpvmult(sub, 1/(dist*dist)));
+	}
+    
+    
+	cpBodyUpdateVelocity(body, gravity, damping, dt);
+}
+
 
 @implementation CCQuadPhysicsParticleSystem
 
 @synthesize texture;
 
--(id) initWithTotalParticles:(int) numberOfParticles
+-(id) initWithTotalParticles:(int) numberOfParticles chipmunkSpace:(cpSpace *)aSpace
 {
 	// base initialization
 	if( (self=[super init]) ) {
 		
 		totalParticleCount = numberOfParticles;
+        space = aSpace;
 		
 		// allocating data space
 		quads = malloc( sizeof(quads[0]) * numberOfParticles );
@@ -120,7 +164,18 @@ NSMutableArray *attractors = nil;
 		particle->originalColor = particle->color;
 		particle->rotation = 0.0;
 		particle->size = (CCRANDOM_0_1() * 4.0) + 2.0;
-		particle->velocity = cpv(CCRANDOM_0_1() * 50.0, CCRANDOM_0_1() * 50.0);
+        
+        cpBody *body = cpBodyNew(10.0, INFINITY);
+        body->p = particle->position;
+        body->velocity_func = dampingVelocityFunc;
+        cpSpaceAddBody(space, body);
+        
+        cpShape *shape = cpCircleShapeNew(body, particle->size, cpvzero);
+        shape->e = 0.8;
+        shape->u = 0.2;
+        shape->collision_type = PARTICLE_COL_GROUP;
+        shape->data = particle;
+        cpSpaceAddShape(space, shape);
 	}
 }
 
@@ -314,53 +369,6 @@ NSMutableArray *attractors = nil;
 	// restore GL default state
 	// -
 }
-
-#pragma mark -
-#pragma mark Physics loop
-
-- (void)startPhysics {
-	[self schedule:@selector(physicsStep:)];
-}
-
-- (void)stopPhysics {
-	[self unschedule:@selector(physicsStep:)];
-}
-
-- (void)physicsStep:(ccTime)d {
-	for (int i=0 ; i<totalParticleCount ; i++) {
-		ccQuadPhysicsParticle *p = &particles[i];
-		
-		cpVect gravity = p->velocity;
-		CGPoint pos = p->position;
-		
-		for (id ccObject in repulsers) {
-			cpVect sub = cpvsub(p->position, [ccObject position]);
-			float dist = fabsf(cpvdist(p->position, [ccObject position]));
-			sub = cpvmult(sub, 100.0);
-			gravity = cpvadd(gravity,cpvmult(sub, 1/(dist*dist)));
-		}
-		
-		for (id ccObject in attractors) {
-			cpVect sub = cpvsub([ccObject position], p->position);
-			float dist = fabsf(cpvdist(p->position, [ccObject position]));
-			sub = cpvmult(sub, 100.0);
-			gravity = cpvadd(gravity,cpvmult(sub, 1/(dist*dist)));
-		}
-		
-		// damping
-		gravity = cpvmult(gravity, 0.999);
-		cpvclamp(gravity, 50.0);
-
-		p->position = cpvadd(pos, cpvmult(gravity, d));
-		p->velocity = gravity;
-		
-		if (pos.x > 1014.0 || pos.x < 10.0 || pos.y > 758.0 || pos.y < 10.0) 
-			p->position = cpv(1024.0 * CCRANDOM_0_1(), 768.0 * CCRANDOM_0_1());
-	}
-}
-
-#pragma mark -
-#pragma mark Managing nodes that effect the particles
 
 - (void)addRepulser:(id)ccObject {
 	if ([ccObject respondsToSelector:@selector(position)]) {

@@ -11,6 +11,8 @@
 #import "Constants.h"
 #import "Player.h"
 #import "TouchNode.h"
+#import "GameLayer.h"
+#import "CCQuadPhysicsParticleSystem.h"
 
 static void
 dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
@@ -29,13 +31,33 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 @implementation PulseNode
 
 @synthesize particleSystem, meteors, player, controller;
+@synthesize type;
+
+- (id)initWithPosition:(CGPoint)pos space:(cpSpace *)space type:(PulseNodeType)aType {
+	if ((self = [self initWithPosition:pos space:space])) {
+		type = aType;
+		
+		switch (type) {
+			case kmMeteorPulseNodeType:
+				[self initMeteorType];
+				break;
+			case kmGravityWellPulseNodeType:
+				[self initGravityWellType];
+				break;
+			default:
+				return nil;
+		}
+	}
+	
+	return self;
+}
 
 - (id)initWithPosition:(CGPoint)pos space:(cpSpace *)space {
 	if ((self = [super init])) {
-		meteors = [[NSMutableArray alloc] init];
 		currentDestination = CGPointZero;
 		
 		_space = space;
+		type = kmMeteorPulseNodeType;
 		
 		cpBody *body = cpBodyNew(PULSENODE_MASS, INFINITY);
 		body->p = pos;
@@ -56,38 +78,100 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 		
 		joint = cpPinJointNew(pathBody, body, cpvzero, cpvzero);
 		cpSpaceAddConstraint(space, joint);
-		
-		particleSystem = [[CCQuadParticleSystem alloc] initWithFile:@"pulseNode.plist"];
-		particleSystem.position = pos;
-		[self addChild:particleSystem];
-		
 	}
 	
 	return self;
 }
 
+- (void)initMeteorType {
+	CGPoint pos = shape->body->p;
+	
+	meteors = [[NSMutableArray alloc] init];
+	
+	ccColor3B color = ccc3(230, 30, 40);
+	
+	CCSpriteSheet *sheet = [CCSpriteSheet spriteSheetWithFile:@"meteorLauncher.png"];
+	sheet.blendFunc = (ccBlendFunc){ GL_ONE, GL_ONE };
+	outer = [[CCSprite spriteWithSpriteSheet:sheet rect:CGRectMake(0, 0, 106, 136)] retain];
+	outer.position = pos;
+	outer.color = ccc3(230, 30, 40);
+	[sheet addChild:outer];
+	middle = [[CCSprite spriteWithSpriteSheet:sheet rect:CGRectMake(124, 0, 94, 136)] retain];
+	middle.position = pos;
+	middle.color = ccc3(200, 0, 40);
+	[sheet addChild:middle];
+	inner = [[CCSprite spriteWithSpriteSheet:sheet rect:CGRectMake(240, 0, 84, 136)] retain];
+	inner.position = pos;
+	inner.color = ccc3(180, 0, 0);
+	[sheet addChild:inner];
+	
+	[self addChild:sheet];
+}
+
+- (void)initGravityWellType {
+	particleSystem = [[CCPointParticleSystem alloc] initWithFile:@"gravityWell.plist"];
+	particleSystem.position = shape->body->p;
+	
+	[self addChild:particleSystem];
+}
+
 - (void)dealloc {
-	[particleSystem release];
-	[meteors release];
+	if (type == kmGravityWellPulseNodeType) {
+		[particleSystem release];
+	}
+	else if (type == kmMeteorPulseNodeType) {
+		[outer release];
+		[middle release];
+		[inner release];
+		[meteors release];
+	}
+	
 	[super dealloc];
 }
 
 - (void)onEnter {
 	[super onEnter];
 	
-	[self schedule:@selector(launchMeteorStep:) interval:5.0f];
+	if (type == kmMeteorPulseNodeType) {
+		id rotate = [CCRepeatForever actionWithAction:[CCRotateBy actionWithDuration:1/40 angle:1.0]];
+		id rotate2 = [CCRepeatForever actionWithAction:[CCRotateBy actionWithDuration:1/40 angle:1.0]];
+		id revRotate = [CCRepeatForever actionWithAction:[CCRotateBy actionWithDuration:1/40 angle:-1.0]];
+		
+		[outer runAction:rotate2];
+		[middle runAction:revRotate];
+		[inner runAction:rotate];
+		
+		[self schedule:@selector(launchMeteorStep:) interval:5.0f];
+	}
+	else if (type == kmGravityWellPulseNodeType) {
+		[[controller.bgLayer particleSystem] addAttractor:particleSystem];
+	}
+	
+	
 	[self schedule:@selector(updateStep:)];
 }
 
 - (void)onExit {
 	[super onExit];
 	
-	[self unschedule:@selector(launchMeteorStep:)];
+	if (type == kmMeteorPulseNodeType)
+		[self unschedule:@selector(launchMeteorStep:)];
+	else if (type == kmGravityWellPulseNodeType) {
+		[[controller.bgLayer particleSystem] removeAttractor:particleSystem];
+	}
+	
 	[self unschedule:@selector(updateStep:)];
 }
 
 - (void)setPosition:(CGPoint)pos {
-	self.particleSystem.position = pos;
+	if (type == kmMeteorPulseNodeType) {
+		outer.position = pos;
+		middle.position = pos;
+		inner.position = pos;
+	}
+	else if (type == kmGravityWellPulseNodeType) {
+		particleSystem.position = pos;
+	}
 }
 
 - (void)setRotation:(float)rot {
@@ -133,12 +217,12 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 		int ind = random() % [touchNodes count];
 		TouchNode *tNode = [touchNodes objectAtIndex:ind];
 		
-		CGPoint end = ccpSub(tNode.shape->body->p, self.particleSystem.position);
+		CGPoint end = ccpSub(tNode.shape->body->p, outer.position);
 		end.x = end.x + (float)(random() % 40) - 20.0;
 		end.y = end.y + (float)(random() % 40) - 20.0;
 		
 		end = ccpNormalize(end);
-		MeteorNode *met = [[[MeteorNode alloc] initWithStart:self.particleSystem.position direction:end space:_space pulseNode:self] autorelease];
+		MeteorNode *met = [[[MeteorNode alloc] initWithStart:outer.position direction:end space:_space pulseNode:self] autorelease];
 		[meteors addObject:met];
 		[self addChild:met];
 	}

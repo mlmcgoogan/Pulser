@@ -34,7 +34,6 @@ typedef struct _ccQuadPhysicsParticle {
 	ccColor4F	originalColor;
 	float		rotation;
 	float		size;
-	cpVect		velocity;
 } ccQuadPhysicsParticle;
 
 /** CCQuadParticleSystem is a subclass of CCParticleSystem
@@ -59,6 +58,9 @@ typedef struct _ccQuadPhysicsParticle {
 	CCTexture2D *texture;
 	ccBlendFunc blendFunc;
 	int totalParticleCount;
+    
+    // For Chipmunk integration
+    cpSpace *space;
 }
 
 @property (nonatomic, readonly,retain) CCTexture2D *texture;
@@ -78,12 +80,7 @@ typedef struct _ccQuadPhysicsParticle {
 // update OpenGL buffer
 - (void)postStep;
 
-//physics loop
-- (void)startPhysics;
-- (void)stopPhysics;
-- (void)physicsStep:(ccTime)d;
-
-//physics elements
+//physics
 - (void)addRepulser:(id)ccObject;
 - (void)removeRepulser:(id)ccObject;
 - (void)addAttractor:(id)ccObject;
