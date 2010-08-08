@@ -60,8 +60,6 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 		kamikazeTimer = nil;
 		controller = [gameController retain];
 		
-		shells = [[NSMutableArray alloc] init];
-		
 		touchCurrent = CGPointZero;
 		_space = space;
 		
@@ -87,72 +85,36 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 - (void)initSpriteWithPosition:(CGPoint)pos {
 	if (!sprite) {
 		
-		CCSpriteSheet *blendSheet = [controller blendSheet];
-		CCSpriteSheet *noBlendSheet = [controller noBlendSheet];
+		CCSpriteSheet *sheet = [CCSpriteSheet spriteSheetWithFile:@"touchNode.png"];
+		sheet.blendFunc = (ccBlendFunc){GL_ONE, GL_ONE};
+		CGRect r = CGRectMake(0, 0, 100, 100);
 		
-		sprite = [[CCSprite alloc] initWithSpriteSheet:noBlendSheet rect:CGRectMake(0.0, 0.0, 130.0, 128.0)];
-		//sprite.scaleX = 0.01;
-		//sprite.scaleY = 0.01;
-		[noBlendSheet addChild:sprite];
+		sprite = [[CCSprite spriteWithSpriteSheet:sheet rect:r] retain];
+		[sprite runAction:[CCRepeatForever actionWithAction:[CCRotateBy actionWithDuration:1/60 angle:-1.0]]];
+		[sheet addChild:sprite];
 		sprite.position = pos;
 		
-		center = [[CCSprite alloc] initWithSpriteSheet:noBlendSheet rect:CGRectMake(130.0, 0.0, 130.0, 128.0)];
-		[noBlendSheet addChild:center];
-		center.position = pos;
-		
-		/*
-		id s1,s2;
-		s1 = [CCScaleTo actionWithDuration:1.0f scale:1.1];
-		s2 = [CCScaleTo actionWithDuration:0.2f scale:1.0];
-		[sprite runAction:[CCSequence actions:s1, s2, nil]];*/
-		
-		int outerShellCount = 0;
-		int innerShellCount = 8;
-		float speed = (float)(random() % 15 + 15);
-		
-		for (int i=0 ; i<outerShellCount ; i++) {
-			speed = (float)(random() % 15 + 15);
-			float shellSize = random() % 10 > 4 ? 390.0 : 260.0;
-			float rotDir = random() & 10 > 4 ? 1.0 : -1.0;
-			CCSprite *shellSprite = [CCSprite spriteWithSpriteSheet:blendSheet rect:CGRectMake(shellSize, 0.0, 130.0, 128.0)];
-			float rot = (float)(random() % 360);
-			shellSprite.position = pos;
-			shellSprite.rotation = rot;
-			[shellSprite runAction:[CCRepeatForever actionWithAction:[CCRotateBy actionWithDuration:1/speed angle:rotDir]]];
-			[shells addObject:shellSprite];
-			[blendSheet addChild:shellSprite z:0];
+		NSMutableArray *arr = [NSMutableArray array];
+		for (int i=0 ; i<2 ; i++) {
+			CCSprite *spr = [CCSprite spriteWithSpriteSheet:sheet rect:r];
+			spr.anchorPoint = i%2==0 ? ccp(0.55,0.55) : ccp(0.45,0.45);
+			spr.position = pos;
+			[spr runAction:[CCRepeatForever actionWithAction:[CCRotateBy actionWithDuration:1/60 angle:(float)i*1.5]]];
+			[sheet addChild:spr];
+			[arr addObject:spr];
 		}
-		speed = 10.0;
-		float rotDir = 1.0;
-		for (int i=0 ; i<innerShellCount ; i++) {
-			speed += (float)(random() % 15 + 15);
-			float shellSize;
-			
-			if (i < innerShellCount / 3) {
-				shellSize = 780.0;
-			}
-			else if (i < innerShellCount / 3 * 2) {
-				shellSize = 650.0;
-			}
-			else {
-				shellSize = 520.0;
-			}
-			
-			rotDir = -rotDir;
-			CCSprite *shellSprite = [CCSprite spriteWithSpriteSheet:blendSheet rect:CGRectMake(shellSize, 0.0, 130.0, 128.0)];
-			float rot = (float)(random() % 360);
-			shellSprite.position = pos;
-			shellSprite.rotation = rot;
-			[shellSprite runAction:[CCRepeatForever actionWithAction:[CCRotateBy actionWithDuration:1/speed angle:rotDir]]];
-			[shells addObject:shellSprite];
-			[blendSheet addChild:shellSprite];
-		}
+		
+		sprites = [[NSArray alloc] initWithArray:arr];
+		
+		[self addChild:sheet];
+		
 	}
 }
 
 - (void)dealloc {
+	[sprites release];
+	[sprite release];
 	[controller release];
-	[shells release];
 	[super dealloc];
 }
 
@@ -184,25 +146,14 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 			newComps[i] = colorComponents[i] * 255.0;
 		}
 		
-		for (CCSprite *shellSprite in shells) {
-			CGFloat r,g,b;
-			r = 140.0 + (float)(random() % 80 - 30);
-			g = 140.0 + (float)(random() % 80 - 30);
-			b = 255.0;
-			id<CCRGBAProtocol> stn = (id<CCRGBAProtocol>)shellSprite;
-			[stn setColor:ccc3((GLubyte)r, (GLubyte)g, (GLubyte)b)];
-		}
+		ccColor3B color = ccc3((GLubyte)newComps[0], (GLubyte)newComps[1], (GLubyte)newComps[2]);
 		
 		id<CCRGBAProtocol> tn = (id<CCRGBAProtocol>)sprite;
-		[tn setColor:ccc3((GLubyte)newComps[0], (GLubyte)newComps[1], (GLubyte)newComps[2])];
-		tn = (id<CCRGBAProtocol>)center;
-		[tn setColor:ccc3((GLubyte)newComps[0], (GLubyte)newComps[1], (GLubyte)newComps[2])];
+		[tn setColor:color];
 		
-		if (kamikazeModeActive) {
-			for (CCSprite *shell in shells) {
-				id<CCRGBAProtocol> tn = (id<CCRGBAProtocol>)shell;
-				[tn setColor:ccc3((GLubyte)newComps[0], (GLubyte)newComps[1], (GLubyte)newComps[2])];
-			}
+		for (CCSprite *spr in sprites) {
+			id<CCRGBAProtocol> tn = (id<CCRGBAProtocol>)spr;
+			[tn setColor:color];
 		}
 	}
 }
@@ -211,7 +162,7 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 #define DEFAULT_COLOR ccc3(66,103,223)
 
 - (void)tintNodeBasedOnMeteorProximity:(NSArray *)meteors {
-	id<CCRGBAProtocol> tn = (id<CCRGBAProtocol>)center;
+	id<CCRGBAProtocol> tn = (id<CCRGBAProtocol>)sprite;
 	ccColor3B color = [tn color];
 	
 	MeteorNode *closest = nil;
@@ -247,6 +198,11 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 	color.b = 223 - (int)(223.0*colorFactor);
 	
 	[tn setColor:color];
+	
+	for (CCSprite *spr in sprites) {
+		tn = (id<CCRGBAProtocol>)spr;
+		[tn setColor:color];
+	}
 }
 
 #pragma mark -
@@ -254,11 +210,9 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 
 - (void)setPosition:(CGPoint)pos {
 	[self.sprite setPosition:pos];
-	[center setPosition:pos];
 	
-	for (CCSprite *spr in shells) {
+	for (CCSprite *spr in sprites)
 		[spr setPosition:pos];
-	}
 	
 	if (kamikazeModeActive) {
 		kamikazeSystem.position = pos;
@@ -266,7 +220,7 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 }
 
 - (void)setRotation:(float)rot {
-	[self.sprite setRotation:rot];
+	
 }
 
 #pragma mark -
@@ -326,13 +280,6 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 #pragma mark Removal
 
 - (void)prepForRemoval {
-	CCSpriteSheet *blendSheet = [controller blendSheet];
-	CCSpriteSheet *noBlendSheet = [controller noBlendSheet];
-	
-	[noBlendSheet removeChild:sprite cleanup:YES];
-	[noBlendSheet removeChild:center cleanup:YES];
-	for (CCSprite *spr in shells)
-		[blendSheet removeChild:spr cleanup:YES];
 	
 	if (kamikazeModeActive)
 		[self deactivateKamikaze];

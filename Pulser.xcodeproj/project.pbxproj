@@ -69,6 +69,7 @@
 		A371005F117F7CC400C435F8 /* GameLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A371005E117F7CC400C435F8 /* GameLayer.m */; };
 		A374974E1208E9D70079C9F6 /* meteorLauncher.png in Resources */ = {isa = PBXBuildFile; fileRef = A374974D1208E9D70079C9F6 /* meteorLauncher.png */; };
 		A37497561208EFDC0079C9F6 /* gravityWell.plist in Resources */ = {isa = PBXBuildFile; fileRef = A37497551208EFDC0079C9F6 /* gravityWell.plist */; };
+		A386D494120BC24700A09BE6 /* touchNode.png in Resources */ = {isa = PBXBuildFile; fileRef = A386D493120BC24700A09BE6 /* touchNode.png */; };
 		A387081D11E9590000C6C80D /* BackgroundEmitter.plist in Resources */ = {isa = PBXBuildFile; fileRef = A387081C11E9590000C6C80D /* BackgroundEmitter.plist */; };
 		A387082311E95F6300C6C80D /* CCParticleSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = A387082211E95F6300C6C80D /* CCParticleSystem.m */; };
 		A3870DF911EF7F3E00C6C80D /* CCPhysicsParticleSystem.m in Sources */ = {isa = PBXBuildFile; fileRef = A3870DF811EF7F3E00C6C80D /* CCPhysicsParticleSystem.m */; };
@@ -270,6 +271,7 @@
 		A371005E117F7CC400C435F8 /* GameLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameLayer.m; sourceTree = "<group>"; };
 		A374974D1208E9D70079C9F6 /* meteorLauncher.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = meteorLauncher.png; sourceTree = "<group>"; };
 		A37497551208EFDC0079C9F6 /* gravityWell.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = gravityWell.plist; sourceTree = "<group>"; };
+		A386D493120BC24700A09BE6 /* touchNode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = touchNode.png; sourceTree = "<group>"; };
 		A387081C11E9590000C6C80D /* BackgroundEmitter.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BackgroundEmitter.plist; sourceTree = "<group>"; };
 		A387082111E95F6300C6C80D /* CCParticleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCParticleSystem.h; sourceTree = "<group>"; };
 		A387082211E95F6300C6C80D /* CCParticleSystem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCParticleSystem.m; sourceTree = "<group>"; };
@@ -744,6 +746,7 @@
 		A3710054117F7BD100C435F8 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				A386D493120BC24700A09BE6 /* touchNode.png */,
 				A3B268AD120B336B00BF4E26 /* bg1.png */,
 				A3B2688F120B2A1100BF4E26 /* meteor.png */,
 				A374974D1208E9D70079C9F6 /* meteorLauncher.png */,
@@ -1143,6 +1146,7 @@
 				A37497561208EFDC0079C9F6 /* gravityWell.plist in Resources */,
 				A3B26890120B2A1100BF4E26 /* meteor.png in Resources */,
 				A3B268AE120B336B00BF4E26 /* bg1.png in Resources */,
+				A386D494120BC24700A09BE6 /* touchNode.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

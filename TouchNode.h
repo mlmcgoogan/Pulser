@@ -25,7 +25,7 @@ typedef enum BoundType {
 
 @interface TouchNode : CCLayer {
 	CCSprite *sprite;
-	CCSprite *center;
+	NSArray *sprites;
 	CCPointParticleSystem *kamikazeSystem;
 	Player *player;
 	GameLayer *controller;
@@ -37,7 +37,6 @@ typedef enum BoundType {
 	@private
 	CGPoint touchStart;
 	CGPoint touchCurrent;
-	NSMutableArray *shells;
 	
 	NSTimer *kamikazeTimer;
 	BOOL kamikazeModeActive;
