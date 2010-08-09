@@ -266,14 +266,17 @@ dampingVelocityFunc(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt)
 	}
 	
 	touchCurrent = CGPointZero;
-	CGPoint pos = [self localTouchPoint:touch];
 	
-	CGPoint vect = ccpNormalize(ccpSub(pos, touchStart));
-	CGFloat mag = fabsf(ccpDistance(pos, touchStart)) * 50.0;
-	
-	vect = ccpMult(vect, mag);
-	
-	cpBodyApplyImpulse(self.shape->body, vect, cpvzero);
+	if (kamikazeModeActive) {
+		CGPoint pos = [self localTouchPoint:touch];
+		
+		CGPoint vect = ccpNormalize(ccpSub(pos, touchStart));
+		CGFloat mag = fabsf(ccpDistance(pos, touchStart)) * 50.0;
+		
+		vect = ccpMult(vect, mag);
+		
+		cpBodyApplyImpulse(self.shape->body, vect, cpvzero);
+	}
 }
 
 #pragma mark -
